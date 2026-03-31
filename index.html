@@ -1424,7 +1424,7 @@ function downloadBattlePlan() {
       <div class="section-label">AFTER ACTION REVIEW</div>
       <table class="q-table">
         ${state.aar.win  ? `<tr><td class="field-label">WHAT WENT WELL</td><td>${escPdf(state.aar.win)}</td></tr>` : ''}
-        ${state.aar.loss ? `<tr><td class="field-label">WHAT DIDN'T</td><td>${escPdf(state.aar.loss)}</td></tr>` : ''}
+        ${state.aar.loss ? `<tr><td class="field-label">WHAT DIDN&#39;T</td><td>${escPdf(state.aar.loss)}</td></tr>` : ''}
         ${state.aar.adj  ? `<tr><td class="field-label">ADJUSTMENTS</td><td>${escPdf(state.aar.adj)}</td></tr>` : ''}
         ${state.aar.next ? `<tr><td class="field-label">NEXT QUARTER</td><td>${escPdf(state.aar.next)}</td></tr>` : ''}
         ${state.aar.score !== null ? `<tr><td class="field-label">SCORE</td><td>${state.aar.score}/10</td></tr>` : ''}
