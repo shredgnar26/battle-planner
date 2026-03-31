@@ -476,7 +476,7 @@ main { padding-bottom: 40px; }
 </div>
 
 <script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
 const sb = createClient(
   'https://wjyhehuucmokdkpwiudf.supabase.co',
@@ -1391,6 +1391,11 @@ function startNextQuarter() {
 }
 
 function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// Render immediately from localStorage so app isn't blank while Supabase loads
+load();
+renderQuadrants();
+updateBattleReady();
 
 function downloadBattlePlan() {
   const Q_COLORS = { calibration:'#7a7245', connection:'#7a4a22', condition:'#2a4f6e', contribution:'#4a5a2a' };
