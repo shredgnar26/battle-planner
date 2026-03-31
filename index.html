@@ -12,13 +12,14 @@
   );
   document.getElementById('signin-btn').addEventListener('click', async () => {
     const email = document.getElementById('auth-email').value.trim();
-    if (!email) { document.getElementById('auth-msg').textContent = 'Enter your email first.'; return; }
-    document.getElementById('auth-msg').textContent = 'Sending login link...';
-    const { error } = await window.sb.auth.signInWithOtp({ email });
+    const password = document.getElementById('auth-password').value.trim();
+    if (!email || !password) { document.getElementById('auth-msg').textContent = 'Enter email and password.'; return; }
+    document.getElementById('auth-msg').textContent = 'Signing in...';
+    const { error } = await window.sb.auth.signInWithPassword({ email, password });
     if (error) {
       document.getElementById('auth-msg').textContent = 'Error: ' + error.message;
     } else {
-      document.getElementById('auth-msg').textContent = '✓ Check your email for a login link.';
+      document.getElementById('auth-msg').textContent = '✓ Signed in!';
     }
   });
 </script>
