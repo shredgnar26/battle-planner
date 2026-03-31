@@ -1519,7 +1519,7 @@ async function signIn() {
   const email = document.getElementById('auth-email').value.trim();
   if (!email) { document.getElementById('auth-msg').textContent = 'Enter your email first.'; return; }
   document.getElementById('auth-msg').textContent = 'Sending login link...';
-  const { error } = await sb.auth.signInWithOtp({ email });
+  const { error } = await window.sb.auth.signInWithOtp({ email });
   if (error) {
     document.getElementById('auth-msg').textContent = 'Error: ' + error.message;
   } else {
@@ -1528,15 +1528,15 @@ async function signIn() {
 }
 
 async function signOut() {
-  await sb.auth.signOut();
+  await window.sb.auth.signOut();
   location.reload();
 }
 
 // ===== CLOUD SAVE =====
 async function saveToCloud() {
-  const { data: { user } } = await sb.auth.getUser();
+  const { data: { user } } = await window.sb.auth.getUser();
   if (!user) return;
-  await sb.from('plans').upsert({
+  await window.sb.from('plans').upsert({
     user_id: user.id,
     data: state,
     updated_at: new Date().toISOString()
@@ -1544,9 +1544,9 @@ async function saveToCloud() {
 }
 
 async function loadFromCloud() {
-  const { data: { user } } = await sb.auth.getUser();
+  const { data: { user } } = await window.sb.auth.getUser();
   if (!user) return false;
-  const { data } = await sb.from('plans').select('data').eq('user_id', user.id).single();
+  const { data } = await window.sb.from('plans').select('data').eq('user_id', user.id).single();
   if (data?.data) {
     const p = data.data;
     state.quarter = p.quarter || 1;
@@ -1580,7 +1580,7 @@ function save() {
 }
 
 // ===== INIT =====
-sb.auth.onAuthStateChange(async (event, session) => {
+window.sb.auth.onAuthStateChange(async (event, session) => {
   if (session?.user) {
     document.getElementById('auth-screen').style.display = 'none';
     document.getElementById('menu-name').textContent = session.user.email;
@@ -1593,7 +1593,7 @@ sb.auth.onAuthStateChange(async (event, session) => {
   }
 });
 
-sb.auth.getSession().then(({ data: { session } }) => {
+window.sb.auth.getSession().then(({ data: { session } }) => {
   if (!session) {
     document.getElementById('auth-screen').style.display = 'flex';
   }
