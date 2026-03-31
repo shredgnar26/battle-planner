@@ -4,25 +4,6 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
 <title>Battle Planner</title>
-<script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-  window.sb = createClient(
-    'https://wjyhehuucmokdkpwiudf.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndqeWhlaHV1Y21va2RrcHdpdWRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5NjE1MzMsImV4cCI6MjA5MDUzNzUzM30.g5ZF_qad1gM3eSZI8ohbZJBOAN7UIdtBtrwJ127Afpo'
-  );
-  document.getElementById('signin-btn').addEventListener('click', async () => {
-    const email = document.getElementById('auth-email').value.trim();   
-    const password = document.getElementById('auth-password').value.trim();
-    if (!email || !password) { document.getElementById('auth-msg').textContent = 'Enter email and password.'; return; }
-    document.getElementById('auth-msg').textContent = 'Signing in...';
-    const { error } = await window.sb.auth.signInWithPassword({ email, password });
-    if (error) {
-      document.getElementById('auth-msg').textContent = 'Error: ' + error.message;
-    } else {
-      document.getElementById('auth-msg').textContent = '✓ Signed in!';
-    }
-  });
-</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
@@ -92,7 +73,7 @@ main { padding-bottom: 40px; }
 .finalize-btn:hover { background: rgba(255,255,255,0.15); border-color: white; }
 .finalize-btn.finalized { background: rgba(255,255,255,0.2); border-color: white; }
 
-/* ===== NEW DAILY SCREEN ===== */
+/* DAILY SCREEN */
 .daily-header { background: var(--dark-header); padding: 12px 14px 0; border-bottom: 1px solid #2a2a26; }
 .daily-header-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
 .daily-date-display { font-family: var(--font-display); font-size: 26px; letter-spacing: 2px; flex: 1; line-height: 1; }
@@ -205,8 +186,6 @@ main { padding-bottom: 40px; }
 .stats-ring-label { font-family: var(--font-cond); font-size: 12px; font-weight: 700; letter-spacing: 2px; opacity: 0.7; }
 .dq-week-icon.active { background: rgba(255,255,255,0.25); border-color: white; color: white; }
 
-/* OLD DAILY — remove */
-
 /* VISION */
 .vision-tab { padding: 20px 16px; }
 .section-hd { background: var(--dark-header); border-left: 4px solid var(--orange); padding: 16px; margin-bottom: 20px; border-radius: 0 4px 4px 0; }
@@ -301,7 +280,6 @@ main { padding-bottom: 40px; }
   <div id="tab-quadrants" class="tab-content active"></div>
 
   <div id="tab-daily" class="tab-content">
-    <!-- Daily sticky header -->
     <div class="daily-header">
       <div class="daily-header-top">
         <div class="daily-logo-sm">
@@ -328,10 +306,8 @@ main { padding-bottom: 40px; }
       </div>
     </div>
 
-    <!-- Quadrant cards -->
     <div id="daily-quadrant-cards"></div>
 
-    <!-- Bottom section: Non-negotiables, tasks, AAR -->
     <div class="daily-bottom-section">
       <div class="daily-bottom-bg">
         <div class="daily-section-title">DAILY NON-NEGOTIABLES</div>
@@ -406,28 +382,21 @@ main { padding-bottom: 40px; }
     </div>
   </div>
 </main>
+
 <!-- AUTH SCREEN -->
-<div id="auth-screen" style="
-  position:fixed;inset:0;background:#1e1e1c;z-index:2000;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:40px 24px;
-">
+<div id="auth-screen" style="position:fixed;inset:0;background:#1e1e1c;z-index:2000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;">
   <div style="font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:4px;color:#f0ece0;margin-bottom:8px">BATTLE PLANNER</div>
   <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:2px;color:#a09880;margin-bottom:48px">ORDER OF MAN</div>
   <input id="auth-email" type="email" placeholder="Enter your email"
-    style="width:100%;max-width:320px;background:#111110;border:1px solid #444;color:#f0ece0;
-    font-family:'Barlow',sans-serif;font-size:16px;padding:14px 16px;border-radius:4px;
-    outline:none;margin-bottom:12px;text-align:center"/>
-  <input id="auth-password" type="password" placeholder="Password" style="width:100%;max-width:320px;background:#111110;border:1px solid #444;color:#f0ece0;font-family:'Barlow',sans-serif;font-size:16px;padding:14px 16px;border-radius:4px;outline:none;margin-bottom:12px;text-align:center"/>
-  <button id="signin-btn" style="
-  width:100%;max-width:320px;background:#d4621a;color:white;border:none;
-  border-radius:40px;font-family:'Barlow Condensed',sans-serif;font-size:16px;
-  font-weight:700;letter-spacing:2px;padding:16px;cursor:pointer;margin-bottom:16px">
-  SIGN IN / SIGN UP
+    style="width:100%;max-width:320px;background:#111110;border:1px solid #444;color:#f0ece0;font-family:'Barlow',sans-serif;font-size:16px;padding:14px 16px;border-radius:4px;outline:none;margin-bottom:12px;text-align:center"/>
+  <input id="auth-password" type="password" placeholder="Password"
+    style="width:100%;max-width:320px;background:#111110;border:1px solid #444;color:#f0ece0;font-family:'Barlow',sans-serif;font-size:16px;padding:14px 16px;border-radius:4px;outline:none;margin-bottom:12px;text-align:center"/>
+  <button id="signin-btn" style="width:100%;max-width:320px;background:#d4621a;color:white;border:none;border-radius:40px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:2px;padding:16px;cursor:pointer;margin-bottom:16px">
     SIGN IN / SIGN UP
   </button>
   <div id="auth-msg" style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:#a09880;letter-spacing:1px;text-align:center"></div>
 </div>
+
 <div class="save-toast" id="save-toast">SAVED ✓</div>
 
 <!-- HAMBURGER MENU OVERLAY -->
@@ -448,18 +417,18 @@ main { padding-bottom: 40px; }
       <div class="menu-item-icon">📋</div>
       <div class="menu-item-label">TRACKER</div>
     </div>
+    <div class="menu-item" onclick="signOut()" style="cursor:pointer">
+      <div class="menu-item-icon">🚪</div>
+      <div class="menu-item-label">SIGN OUT</div>
+    </div>
     <div class="menu-item menu-item-inactive">
       <div class="menu-item-icon">👥</div>
       <div class="menu-item-label">MY TEAM</div>
     </div>
-    <div class="menu-item menu-item-inactive">
-      <div class="menu-item-icon">⚙️</div>
-      <div class="menu-item-label">ACCOUNT</div>
-    </div>
   </div>
 </div>
 
-<!-- VISION MODAL (from menu) -->
+<!-- VISION MODAL -->
 <div class="vision-modal" id="vision-modal">
   <div class="vision-modal-inner">
     <div class="vision-modal-check">☑</div>
@@ -485,7 +454,6 @@ main { padding-bottom: 40px; }
 <div class="start-date-screen" id="start-date-screen">
   <div class="start-date-bg">
     <div class="start-date-title">SELECT START DATE</div>
-
     <div class="start-date-options">
       <div class="start-opt" onclick="selectStartOpt('today')" id="opt-today">
         <div class="start-opt-text">
@@ -502,12 +470,103 @@ main { padding-bottom: 40px; }
         <div class="start-opt-check" id="check-tomorrow">✓</div>
       </div>
     </div>
-
     <div class="quarter-info" id="quarter-info"></div>
-
     <button class="start-tracking-btn" onclick="confirmStartDate()">START TRACKING ›</button>
   </div>
 </div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+const sb = createClient(
+  'https://wjyhehuucmokdkpwiudf.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndqeWhlaHV1Y21va2RrcHdpdWRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5NjE1MzMsImV4cCI6MjA5MDUzNzUzM30.g5ZF_qad1gM3eSZI8ohbZJBOAN7UIdtBtrwJ127Afpo'
+);
+
+// ===== AUTH BUTTON =====
+document.getElementById('signin-btn').addEventListener('click', async () => {
+  const email = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value.trim();
+  if (!email || !password) { document.getElementById('auth-msg').textContent = 'Enter email and password.'; return; }
+  document.getElementById('auth-msg').textContent = 'Signing in...';
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) {
+    document.getElementById('auth-msg').textContent = 'Error: ' + error.message;
+  } else {
+    document.getElementById('auth-msg').textContent = '✓ Signed in!';
+  }
+});
+
+// ===== CLOUD SAVE =====
+async function saveToCloud() {
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+  await sb.from('plans').upsert({
+    user_id: user.id,
+    data: state,
+    updated_at: new Date().toISOString()
+  }, { onConflict: 'user_id' });
+}
+
+async function loadFromCloud() {
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return false;
+  const { data } = await sb.from('plans').select('data').eq('user_id', user.id).single();
+  if (data?.data) {
+    const p = data.data;
+    state.quarter = p.quarter || 1;
+    if (p.vision) state.vision = p.vision;
+    if (p.aar) state.aar = p.aar;
+    if (p.daily) state.daily = p.daily;
+    if (p.startDate) state.startDate = p.startDate;
+    if (p.quarterEnd) state.quarterEnd = p.quarterEnd;
+    if (p.modalDismissed) state.modalDismissed = p.modalDismissed;
+    if (p.nonNeg) state.nonNeg = p.nonNeg;
+    if (p.quadrants) {
+      QUADRANTS.forEach(q => {
+        if (p.quadrants[q.key]) {
+          FIELDS.forEach(f => {
+            if (p.quadrants[q.key][f]) state.quadrants[q.key][f] = p.quadrants[q.key][f];
+          });
+        }
+      });
+    }
+    return true;
+  }
+  return false;
+}
+
+// expose signOut globally
+window.signOut = async function() {
+  await sb.auth.signOut();
+  location.reload();
+};
+
+// ===== AUTH STATE =====
+sb.auth.onAuthStateChange(async (event, session) => {
+  if (session?.user) {
+    document.getElementById('auth-screen').style.display = 'none';
+    document.getElementById('menu-name').textContent = session.user.email;
+    load();
+    await loadFromCloud();
+    renderQuadrants();
+    updateBattleReady();
+  } else {
+    document.getElementById('auth-screen').style.display = 'flex';
+  }
+});
+
+sb.auth.getSession().then(({ data: { session } }) => {
+  if (!session) {
+    document.getElementById('auth-screen').style.display = 'flex';
+  }
+});
+
+// patch save to also cloud save
+const _origSave = window._save;
+window._cloudSave = saveToCloud;
+
+</script>
 
 <script>
 const QUADRANTS = [
@@ -598,6 +657,7 @@ function load() {
 function save() {
   localStorage.setItem('bp_v3', JSON.stringify(state));
   showToast();
+  if (window._cloudSave) window._cloudSave();
 }
 
 let toastT;
@@ -635,13 +695,11 @@ function updateBattleReady() {
   const pct = calcBattleReady();
   document.getElementById('ready-label').textContent = pct + '% Battle-Ready';
   document.getElementById('ready-fill').style.width = pct + '%';
-  // Trigger battle-ready modal when hitting 100% for the first time
   if (pct === 100 && !state.startDate && !state.modalDismissed) {
     setTimeout(() => showBattleReadyModal(), 600);
   }
 }
 
-// ===== BATTLE READY MODAL =====
 function showBattleReadyModal() {
   document.getElementById('battle-ready-modal').classList.add('show');
 }
@@ -658,7 +716,6 @@ function openStartDate() {
   document.getElementById('start-date-screen').classList.add('show');
 }
 
-// ===== START DATE =====
 let selectedStartOpt = 'today';
 
 function fmtLong(date) {
@@ -666,14 +723,12 @@ function fmtLong(date) {
 }
 
 function getQuarterEnd(startDate) {
-  // Standard calendar quarters: Q1 Jan-Mar, Q2 Apr-Jun, Q3 Jul-Sep, Q4 Oct-Dec
-  const month = startDate.getMonth(); // 0-indexed
+  const month = startDate.getMonth();
   let qEndMonth, qEndYear = startDate.getFullYear();
-  if (month <= 2) { qEndMonth = 2; }       // Q1 ends Mar 31
-  else if (month <= 5) { qEndMonth = 5; }  // Q2 ends Jun 30
-  else if (month <= 8) { qEndMonth = 8; }  // Q3 ends Sep 30
-  else { qEndMonth = 11; }                 // Q4 ends Dec 31
-  // Last day of that month
+  if (month <= 2) { qEndMonth = 2; }
+  else if (month <= 5) { qEndMonth = 5; }
+  else if (month <= 8) { qEndMonth = 8; }
+  else { qEndMonth = 11; }
   const end = new Date(qEndYear, qEndMonth + 1, 0);
   return end;
 }
@@ -689,10 +744,8 @@ function getQuarterLabel(date) {
 function populateStartDateScreen() {
   const today = new Date();
   const tomorrow = new Date(); tomorrow.setDate(today.getDate() + 1);
-
   document.getElementById('opt-today-date').textContent = 'Start on ' + fmtLong(today);
   document.getElementById('opt-tomorrow-date').textContent = 'Start on ' + fmtLong(tomorrow);
-
   selectedStartOpt = 'today';
   updateStartOptUI();
   updateQuarterInfo(today);
@@ -732,11 +785,9 @@ function confirmStartDate() {
   state.modalDismissed = true;
   save();
   document.getElementById('start-date-screen').classList.remove('show');
-  // Switch to daily tracker
   switchTab('daily');
 }
 
-// ===== QUADRANTS =====
 function renderQuadrants() {
   const c = document.getElementById('tab-quadrants');
   c.innerHTML = '';
@@ -746,13 +797,10 @@ function renderQuadrants() {
     const pct = Math.round((finalCount / FIELDS.length) * 100);
     const circ = 2 * Math.PI * 22;
     const offset = circ - (pct / 100) * circ;
-
     const block = document.createElement('div');
     block.className = 'quadrant-block';
     block.style.background = q.bg;
-
     const pills = FIELDS.map(f => `<div class="q-pill ${qSt[f].finalized ? 'filled' : ''}"></div>`).join('');
-
     block.innerHTML = `
       <div class="quadrant-header" onclick="toggleQ('${q.key}')">
         <div class="q-header-left">
@@ -786,9 +834,7 @@ function buildQBody(q, qSt) {
     { field:'cp30', title:'30-DAY CHECKPOINT', desc:q.cp30Desc, ex:q.cp30Example },
     { field:'cp60', title:'60-DAY CHECKPOINT', desc:'', ex:q.cp60Example },
   ];
-
   const infoId = `info-${q.key}`;
-
   return `
     <div class="q-intro-block" id="${infoId}">
       <p class="q-intro-text">${q.intro}</p>
@@ -843,7 +889,6 @@ function finalizeField(key, field) {
   f.finalized = !f.finalized;
   save();
   renderQuadrants();
-  // Reopen the toggled quadrant
   const body = document.getElementById('qbody-' + key);
   const chev = document.getElementById('qchev-' + key);
   if (body) { body.classList.add('open'); chev.classList.add('open'); }
@@ -852,7 +897,6 @@ function finalizeField(key, field) {
 
 let openQuadrants = new Set();
 
-// ===== DAILY =====
 function dayKey(offset) {
   const d = new Date(); d.setDate(d.getDate() + offset);
   return d.toISOString().split('T')[0];
@@ -885,7 +929,7 @@ function getDailyData(dk) {
 
 function getWeekDates(dk) {
   const d = dateFromKey(dk);
-  const dow = d.getDay(); // 0=Sun
+  const dow = d.getDay();
   const days = [];
   for (let i = 0; i < 7; i++) {
     const day = new Date(d); day.setDate(d.getDate() - dow + i);
@@ -902,13 +946,10 @@ function getPlanEndDays() {
 }
 
 function calcStats(qKey, weekDates) {
-  // WEEK: done days this week / 7
   let weekDone = 0;
   weekDates.forEach(wdk => {
     if (state.daily[wdk]?.quadrants?.[qKey]?.primary === 'done') weekDone++;
   });
-
-  // QUARTER: done days since startDate through today
   let quarterDone = 0, quarterTotal = 0;
   if (state.startDate) {
     const start = dateFromKey(state.startDate);
@@ -921,14 +962,11 @@ function calcStats(qKey, weekDates) {
       if (state.daily[dk]?.quadrants?.[qKey]?.primary === 'done') quarterDone++;
     }
   }
-
-  // LIFETIME: all recorded days
   const allDays = Object.keys(state.daily);
   let lifetimeDone = 0, lifetimeTotal = allDays.length;
   allDays.forEach(dk => {
     if (state.daily[dk]?.quadrants?.[qKey]?.primary === 'done') lifetimeDone++;
   });
-
   return {
     week: weekDates.length > 0 ? Math.round((weekDone / 7) * 100) : 0,
     quarter: quarterTotal > 0 ? Math.round((quarterDone / quarterTotal) * 100) : 0,
@@ -970,7 +1008,6 @@ function toggleStats(qKey) {
   const grid = document.getElementById('weekgrid-' + qKey);
   const statsKey = qKey + '_stats';
   const isOpen = openQuadrants.has(statsKey);
-
   if (isOpen) {
     openQuadrants.delete(statsKey);
     panel.style.display = 'none';
@@ -986,12 +1023,7 @@ function renderDaily() {
   const dk = dayKey(currentDayOffset);
   const dayData = getDailyData(dk);
   const todayDk = dayKey(0);
-  const isToday = dk === todayDk;
-
-  // Header date
   document.getElementById('daily-date-display').textContent = fmtHeaderDate(dk);
-
-  // Plan ends
   const daysLeft = getPlanEndDays();
   const planLabel = document.getElementById('plan-ends-label');
   if (daysLeft !== null) {
@@ -999,29 +1031,20 @@ function renderDaily() {
   } else {
     planLabel.textContent = 'No plan started yet';
   }
-
-  // Vision preview
   const vp = document.getElementById('daily-vision-preview');
   vp.textContent = state.vision.short || state.vision.long?.slice(0, 60) || 'MY VISION';
-
-  // Quadrant cards
   const container = document.getElementById('daily-quadrant-cards');
   container.innerHTML = '';
   const weekDates = getWeekDates(dk);
-
   QUADRANTS.forEach(q => {
     const qSt = state.quadrants[q.key];
     const dqData = dayData.quadrants[q.key];
     const primaryDone = dqData.primary === 'done';
-
-    // Week completion count
     let weekDone = 0;
     weekDates.forEach(wdk => {
       const wd = getDailyData(wdk);
       if (wd.quadrants[q.key]?.primary === 'done') weekDone++;
     });
-
-    // 84-day progress pills (12 weeks): count total done days
     const allDays = Object.keys(state.daily);
     let totalDone = 0;
     allDays.forEach(d => {
@@ -1029,19 +1052,14 @@ function renderDaily() {
     });
     const pillCount = 84;
     const pillsFilled = Math.min(totalDone, pillCount);
-
     const card = document.createElement('div');
     card.className = 'dq-card';
     card.style.background = q.bg;
-
     const pillsHtml = Array.from({length: pillCount}, (_, i) =>
       `<div class="dq-pill ${i < pillsFilled ? 'done' : ''}"></div>`
     ).join('');
-
     const bodyId = `dqbody-${q.key}`;
     const chevId = `dqchev-${q.key}`;
-
-    // Week grid
     const DAY_LABELS = ['SU','M','T','W','TH','F','S'];
     const weekCells = weekDates.map((wdk, wi) => {
       const wDate = dateFromKey(wdk);
@@ -1056,11 +1074,8 @@ function renderDaily() {
           <div class="week-day-num${isWToday ? ' today-label' : ''}">${isWToday ? 'TODAY' : wDay}</div>
         </div>`;
     }).join('');
-
-    // CP checks
     const cp30Checked = dayData.cpChecks?.[q.key + '_cp30'] || false;
     const cp60Checked = dayData.cpChecks?.[q.key + '_cp60'] || false;
-
     card.innerHTML = `
       <div class="dq-header" onclick="toggleDQ('${q.key}')">
         <div class="dq-icon">${q.icon}</div>
@@ -1070,7 +1085,7 @@ function renderDaily() {
           <div class="dq-progress-pills">${pillsHtml}</div>
         </div>
         <div class="dq-today-btn" onclick="event.stopPropagation(); toggleTodayCheck('${dk}','${q.key}')">
-          <div class="dq-today-check ${primaryDone ? 'checked' : ''}">${primaryDone ? '✓' : '✓'}</div>
+          <div class="dq-today-check ${primaryDone ? 'checked' : ''}">✓</div>
           <div class="dq-today-label">TODAY</div>
         </div>
       </div>
@@ -1082,14 +1097,10 @@ function renderDaily() {
             <div class="dq-week-icon">👥</div>
           </div>
         </div>
-
-        <!-- STATS PANEL -->
         <div class="stats-panel" id="stats-${q.key}" style="display:none">
           ${buildStatsRings(q.key, weekDates)}
         </div>
-
         <div class="week-grid-row" id="weekgrid-${q.key}">${weekCells}</div>
-
         <div class="dq-detail-row">
           <div class="dq-detail-left">
             <div class="dq-detail-label">12-WEEK OBJECTIVE</div>
@@ -1128,7 +1139,6 @@ function renderDaily() {
     container.appendChild(card);
   });
 
-  // Restore open quadrant states after re-render
   openQuadrants.forEach(key => {
     if (key.endsWith('_stats')) {
       const qKey = key.replace('_stats', '');
@@ -1144,21 +1154,14 @@ function renderDaily() {
     }
   });
 
-  // Non-negotiables
   renderNonNeg(dk, dayData);
   renderTodayTasks(dk, dayData);
-
-  // AAR
   const aarEl = document.getElementById('daily-aar-text');
   if (aarEl) aarEl.value = dayData.aar || '';
 }
 
 function toggleDQ(key) {
-  if (openQuadrants.has(key)) {
-    openQuadrants.delete(key);
-  } else {
-    openQuadrants.add(key);
-  }
+  if (openQuadrants.has(key)) { openQuadrants.delete(key); } else { openQuadrants.add(key); }
   const body = document.getElementById('dqbody-' + key);
   const chev = document.getElementById('dqchev-' + key);
   if (body) body.classList.toggle('open', openQuadrants.has(key));
@@ -1188,7 +1191,6 @@ function toggleCpCheck(dk, key) {
   renderDaily();
 }
 
-// Non-negotiables (persistent across days)
 function renderNonNeg(dk, dayData) {
   const list = document.getElementById('non-neg-list');
   if (!list) return;
@@ -1211,7 +1213,6 @@ function addNonNeg() {
   state.nonNeg.push('');
   save();
   renderDaily();
-  // Focus last input
   setTimeout(() => {
     const inputs = document.querySelectorAll('#non-neg-list .task-text-input');
     if (inputs.length) inputs[inputs.length-1].focus();
@@ -1238,7 +1239,6 @@ function toggleNonNeg(dk, i) {
   renderDaily();
 }
 
-// Today's tasks (per-day)
 function renderTodayTasks(dk, dayData) {
   const list = document.getElementById('todays-tasks-list');
   if (!list) return;
@@ -1297,7 +1297,6 @@ function saveDailyAAR() {
 function shareBattlePlan() {
   const appUrl = 'https://shredgnar26.github.io/battle-planner/';
   const vision = state.vision.short || state.vision.long?.slice(0, 120) || '';
-
   const text = `My Battle Plan — Q${state.quarter}\n\n` +
     (vision ? `VISION: "${vision}"\n\n` : '') +
     QUADRANTS.map(q => {
@@ -1307,15 +1306,9 @@ function shareBattlePlan() {
       return obj ? `${q.name}: ${obj}${tactic ? ' → ' + tactic : ''}` : null;
     }).filter(Boolean).join('\n') +
     `\n\nTrack yours: ${appUrl}`;
-
   if (navigator.share) {
-    navigator.share({
-      title: 'My Battle Plan',
-      text: text,
-      url: appUrl,
-    }).catch(() => {});
+    navigator.share({ title: 'My Battle Plan', text: text, url: appUrl }).catch(() => {});
   } else {
-    // Fallback: copy to clipboard
     navigator.clipboard.writeText(text).then(() => {
       const t = document.getElementById('save-toast');
       t.textContent = 'COPIED ✓';
@@ -1326,18 +1319,9 @@ function shareBattlePlan() {
   }
 }
 
-function showDailyMenu() {
-  document.getElementById('menu-overlay').classList.add('open');
-}
-
-function closeMenu() {
-  document.getElementById('menu-overlay').classList.remove('open');
-}
-
-function menuTracker() {
-  closeMenu();
-  switchTab('daily');
-}
+function showDailyMenu() { document.getElementById('menu-overlay').classList.add('open'); }
+function closeMenu() { document.getElementById('menu-overlay').classList.remove('open'); }
+function menuTracker() { closeMenu(); switchTab('daily'); }
 
 function menuVision() {
   closeMenu();
@@ -1346,11 +1330,8 @@ function menuVision() {
   document.getElementById('vision-modal').classList.add('open');
 }
 
-function closeVisionModal() {
-  document.getElementById('vision-modal').classList.remove('open');
-}
+function closeVisionModal() { document.getElementById('vision-modal').classList.remove('open'); }
 
-// ===== VISION =====
 function saveVision() {
   state.vision.long = document.getElementById('vision-long').value;
   state.vision.short = document.getElementById('vision-short').value;
@@ -1368,7 +1349,6 @@ function renderVisionTab() {
   saveVision();
 }
 
-// ===== AAR =====
 function saveAAR() {
   state.aar.win = document.getElementById('aar-win').value;
   state.aar.loss = document.getElementById('aar-loss').value;
@@ -1412,203 +1392,28 @@ function startNextQuarter() {
 
 function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-// ===== PDF DOWNLOAD =====
 function downloadBattlePlan() {
-  const Q_COLORS = {
-    calibration: '#7a7245',
-    connection:  '#7a4a22',
-    condition:   '#2a4f6e',
-    contribution:'#4a5a2a',
-  };
-
+  const Q_COLORS = { calibration:'#7a7245', connection:'#7a4a22', condition:'#2a4f6e', contribution:'#4a5a2a' };
   const today = new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
   const qLabel = state.startDate ? getQuarterLabel(dateFromKey(state.startDate)) : 'Q' + state.quarter;
-  const qYear  = state.startDate ? dateFromKey(state.startDate).getFullYear() : new Date().getFullYear();
+  const qYear = state.startDate ? dateFromKey(state.startDate).getFullYear() : new Date().getFullYear();
   const startFmt = state.startDate ? dateFromKey(state.startDate).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : '—';
-  const endFmt   = state.quarterEnd ? dateFromKey(state.quarterEnd).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : '—';
-
+  const endFmt = state.quarterEnd ? dateFromKey(state.quarterEnd).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : '—';
   const escPdf = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-
-  const visionHtml = `
-    <div class="section vision-section">
-      <div class="section-label">COMPELLING VISION</div>
-      <div class="vision-text">${escPdf(state.vision.long) || '<em>Not set</em>'}</div>
-      ${state.vision.short ? `<div class="vision-short">"${escPdf(state.vision.short)}"</div>` : ''}
-    </div>`;
-
+  const visionHtml = `<div class="section vision-section"><div class="section-label">COMPELLING VISION</div><div class="vision-text">${escPdf(state.vision.long) || '<em>Not set</em>'}</div>${state.vision.short ? `<div class="vision-short">"${escPdf(state.vision.short)}"</div>` : ''}</div>`;
   const quadrantsHtml = QUADRANTS.map(q => {
     const qSt = state.quadrants[q.key];
     const bg = Q_COLORS[q.key];
-    return `
-    <div class="q-block" style="border-left:6px solid ${bg}">
-      <div class="q-block-header" style="color:${bg}">${q.icon} ${q.name}</div>
-      <div class="q-block-sub">${q.subtitle}</div>
-      <table class="q-table">
-        <tr><td class="field-label">12-WEEK OBJECTIVE</td><td>${escPdf(qSt.objective.text) || '<em>Not set</em>'}</td></tr>
-        <tr><td class="field-label">PRIMARY TACTIC</td><td>${escPdf(qSt.primaryTactic.text) || '<em>Not set</em>'}</td></tr>
-        <tr><td class="field-label">SECONDARY TACTIC</td><td>${escPdf(qSt.secondaryTactic.text) || '<em>Not set</em>'}</td></tr>
-        <tr><td class="field-label">30-DAY CHECKPOINT</td><td>${escPdf(qSt.cp30.text) || '<em>Not set</em>'}</td></tr>
-        <tr><td class="field-label">60-DAY CHECKPOINT</td><td>${escPdf(qSt.cp60.text) || '<em>Not set</em>'}</td></tr>
-      </table>
-    </div>`;
+    return `<div class="q-block" style="border-left:6px solid ${bg}"><div class="q-block-header" style="color:${bg}">${q.icon} ${q.name}</div><div class="q-block-sub">${q.subtitle}</div><table class="q-table"><tr><td class="field-label">12-WEEK OBJECTIVE</td><td>${escPdf(qSt.objective.text) || '<em>Not set</em>'}</td></tr><tr><td class="field-label">PRIMARY TACTIC</td><td>${escPdf(qSt.primaryTactic.text) || '<em>Not set</em>'}</td></tr><tr><td class="field-label">SECONDARY TACTIC</td><td>${escPdf(qSt.secondaryTactic.text) || '<em>Not set</em>'}</td></tr><tr><td class="field-label">30-DAY CHECKPOINT</td><td>${escPdf(qSt.cp30.text) || '<em>Not set</em>'}</td></tr><tr><td class="field-label">60-DAY CHECKPOINT</td><td>${escPdf(qSt.cp60.text) || '<em>Not set</em>'}</td></tr></table></div>`;
   }).join('');
-
-  const nonNegHtml = (state.nonNeg || []).length > 0 ? `
-    <div class="section">
-      <div class="section-label">DAILY NON-NEGOTIABLES</div>
-      <ul class="task-list">${state.nonNeg.map(t => `<li>${escPdf(t)}</li>`).join('')}</ul>
-    </div>` : '';
-
-  const aarHtml = (state.aar.win || state.aar.loss || state.aar.adj || state.aar.next) ? `
-    <div class="section">
-      <div class="section-label">AFTER ACTION REVIEW</div>
-      <table class="q-table">
-        ${state.aar.win  ? `<tr><td class="field-label">WHAT WENT WELL</td><td>${escPdf(state.aar.win)}</td></tr>` : ''}
-        ${state.aar.loss ? `<tr><td class="field-label">WHAT DIDN&#39;T</td><td>${escPdf(state.aar.loss)}</td></tr>` : ''}
-        ${state.aar.adj  ? `<tr><td class="field-label">ADJUSTMENTS</td><td>${escPdf(state.aar.adj)}</td></tr>` : ''}
-        ${state.aar.next ? `<tr><td class="field-label">NEXT QUARTER</td><td>${escPdf(state.aar.next)}</td></tr>` : ''}
-        ${state.aar.score !== null ? `<tr><td class="field-label">SCORE</td><td>${state.aar.score}/10</td></tr>` : ''}
-      </table>
-    </div>` : '';
-
-  const html = `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8"/>
-<title>Battle Plan — ${qLabel} ${qYear}</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Barlow', sans-serif; color: #1a1a18; background: white; font-size: 13px; line-height: 1.5; }
-  .page { max-width: 760px; margin: 0 auto; padding: 40px 36px; }
-  .doc-header { display: flex; align-items: flex-end; justify-content: space-between; border-bottom: 3px solid #1a1a18; padding-bottom: 16px; margin-bottom: 28px; }
-  .doc-title { font-family: 'Bebas Neue', sans-serif; font-size: 52px; letter-spacing: 4px; line-height: 1; }
-  .doc-meta { text-align: right; font-family: 'Barlow Condensed', sans-serif; font-size: 13px; color: #666; letter-spacing: 1px; line-height: 1.7; }
-  .doc-quarter { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: #d4621a; letter-spacing: 2px; }
-  .section { margin-bottom: 28px; }
-  .section-label { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: #888; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 12px; }
-  .vision-section { background: #f9f7f3; border-left: 4px solid #d4621a; padding: 16px 18px; border-radius: 0 4px 4px 0; }
-  .vision-text { font-size: 14px; line-height: 1.8; margin-bottom: 8px; font-style: italic; }
-  .vision-short { font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 700; color: #d4621a; }
-  .q-block { padding: 16px 18px; margin-bottom: 16px; background: #fafafa; border-radius: 0 4px 4px 0; page-break-inside: avoid; }
-  .q-block-header { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 3px; margin-bottom: 2px; }
-  .q-block-sub { font-family: 'Barlow Condensed', sans-serif; font-size: 12px; color: #888; letter-spacing: 1px; margin-bottom: 12px; }
-  .q-table { width: 100%; border-collapse: collapse; }
-  .q-table tr { border-bottom: 1px solid #eee; }
-  .q-table tr:last-child { border-bottom: none; }
-  .q-table td { padding: 7px 6px; vertical-align: top; }
-  .field-label { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #888; white-space: nowrap; width: 160px; padding-right: 12px; }
-  .task-list { padding-left: 18px; }
-  .task-list li { margin-bottom: 5px; }
-  .doc-footer { margin-top: 40px; padding-top: 12px; border-top: 1px solid #ddd; font-family: 'Barlow Condensed', sans-serif; font-size: 11px; color: #aaa; letter-spacing: 1px; display: flex; justify-content: space-between; }
-  @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } .page { padding: 20px; } }
-</style>
-</head>
-<body>
-<div class="page">
-  <div class="doc-header">
-    <div>
-      <div class="doc-title">BATTLE PLANNER</div>
-      <div class="doc-quarter">${qLabel} · ${qYear}</div>
-    </div>
-    <div class="doc-meta">Generated: ${today}<br>Start: ${startFmt}<br>End: ${endFmt}</div>
-  </div>
-  ${visionHtml}
-  <div class="section"><div class="section-label">QUADRANTS</div>${quadrantsHtml}</div>
-  ${nonNegHtml}
-  ${aarHtml}
-  <div class="doc-footer"><span>BATTLE PLANNER — ORDER OF MAN</span><span>${qLabel} ${qYear}</span></div>
-</div>
-<script>window.onload=function(){window.print();}<\/script>
-</body></html>`;
-
+  const nonNegHtml = (state.nonNeg || []).length > 0 ? `<div class="section"><div class="section-label">DAILY NON-NEGOTIABLES</div><ul class="task-list">${state.nonNeg.map(t => `<li>${escPdf(t)}</li>`).join('')}</ul></div>` : '';
+  const aarHtml = (state.aar.win || state.aar.loss || state.aar.adj || state.aar.next) ? `<div class="section"><div class="section-label">AFTER ACTION REVIEW</div><table class="q-table">${state.aar.win ? `<tr><td class="field-label">WHAT WENT WELL</td><td>${escPdf(state.aar.win)}</td></tr>` : ''}${state.aar.loss ? `<tr><td class="field-label">WHAT DIDN'T</td><td>${escPdf(state.aar.loss)}</td></tr>` : ''}${state.aar.adj ? `<tr><td class="field-label">ADJUSTMENTS</td><td>${escPdf(state.aar.adj)}</td></tr>` : ''}${state.aar.next ? `<tr><td class="field-label">NEXT QUARTER</td><td>${escPdf(state.aar.next)}</td></tr>` : ''}${state.aar.score !== null ? `<tr><td class="field-label">SCORE</td><td>${state.aar.score}/10</td></tr>` : ''}</table></div>` : '';
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Battle Plan — ${qLabel} ${qYear}</title><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet"><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Barlow',sans-serif;color:#1a1a18;background:white;font-size:13px;line-height:1.5}.page{max-width:760px;margin:0 auto;padding:40px 36px}.doc-header{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:3px solid #1a1a18;padding-bottom:16px;margin-bottom:28px}.doc-title{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:4px;line-height:1}.doc-meta{text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:13px;color:#666;letter-spacing:1px;line-height:1.7}.doc-quarter{font-family:'Bebas Neue',sans-serif;font-size:24px;color:#d4621a;letter-spacing:2px}.section{margin-bottom:28px}.section-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#888;border-bottom:1px solid #ddd;padding-bottom:5px;margin-bottom:12px}.vision-section{background:#f9f7f3;border-left:4px solid #d4621a;padding:16px 18px;border-radius:0 4px 4px 0}.vision-text{font-size:14px;line-height:1.8;margin-bottom:8px;font-style:italic}.vision-short{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:#d4621a}.q-block{padding:16px 18px;margin-bottom:16px;background:#fafafa;border-radius:0 4px 4px 0;page-break-inside:avoid}.q-block-header{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;margin-bottom:2px}.q-block-sub{font-family:'Barlow Condensed',sans-serif;font-size:12px;color:#888;letter-spacing:1px;margin-bottom:12px}.q-table{width:100%;border-collapse:collapse}.q-table tr{border-bottom:1px solid #eee}.q-table tr:last-child{border-bottom:none}.q-table td{padding:7px 6px;vertical-align:top}.field-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#888;white-space:nowrap;width:160px;padding-right:12px}.task-list{padding-left:18px}.task-list li{margin-bottom:5px}.doc-footer{margin-top:40px;padding-top:12px;border-top:1px solid #ddd;font-family:'Barlow Condensed',sans-serif;font-size:11px;color:#aaa;letter-spacing:1px;display:flex;justify-content:space-between}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}.page{padding:20px}}</style></head><body><div class="page"><div class="doc-header"><div><div class="doc-title">BATTLE PLANNER</div><div class="doc-quarter">${qLabel} · ${qYear}</div></div><div class="doc-meta">Generated: ${today}<br>Start: ${startFmt}<br>End: ${endFmt}</div></div>${visionHtml}<div class="section"><div class="section-label">QUADRANTS</div>${quadrantsHtml}</div>${nonNegHtml}${aarHtml}<div class="doc-footer"><span>BATTLE PLANNER — ORDER OF MAN</span><span>${qLabel} ${qYear}</span></div></div><script>window.onload=function(){window.print();}<\/script></body></html>`;
   const blob = new Blob([html], { type: 'text/html' });
   const url = URL.createObjectURL(blob);
   const win = window.open(url, '_blank');
   if (!win) alert('Allow pop-ups to download your Battle Plan PDF.');
 }
-
-// ===== AUTH =====
-async function signIn() {
-  const email = document.getElementById('auth-email').value.trim();
-  if (!email) { document.getElementById('auth-msg').textContent = 'Enter your email first.'; return; }
-  document.getElementById('auth-msg').textContent = 'Sending login link...';
-  const { error } = await window.sb.auth.signInWithOtp({ email });
-  if (error) {
-    document.getElementById('auth-msg').textContent = 'Error: ' + error.message;
-  } else {
-    document.getElementById('auth-msg').textContent = '✓ Check your email for a login link.';
-  }
-}
-
-async function signOut() {
-  await window.sb.auth.signOut();
-  location.reload();
-}
-
-// ===== CLOUD SAVE =====
-async function saveToCloud() {
-  const { data: { user } } = await window.sb.auth.getUser();
-  if (!user) return;
-  await window.sb.from('plans').upsert({
-    user_id: user.id,
-    data: state,
-    updated_at: new Date().toISOString()
-  }, { onConflict: 'user_id' });
-}
-
-async function loadFromCloud() {
-  const { data: { user } } = await window.sb.auth.getUser();
-  if (!user) return false;
-  const { data } = await window.sb.from('plans').select('data').eq('user_id', user.id).single();
-  if (data?.data) {
-    const p = data.data;
-    state.quarter = p.quarter || 1;
-    if (p.vision) state.vision = p.vision;
-    if (p.aar) state.aar = p.aar;
-    if (p.daily) state.daily = p.daily;
-    if (p.startDate) state.startDate = p.startDate;
-    if (p.quarterEnd) state.quarterEnd = p.quarterEnd;
-    if (p.modalDismissed) state.modalDismissed = p.modalDismissed;
-    if (p.nonNeg) state.nonNeg = p.nonNeg;
-    if (p.quadrants) {
-      QUADRANTS.forEach(q => {
-        if (p.quadrants[q.key]) {
-          FIELDS.forEach(f => {
-            if (p.quadrants[q.key][f]) state.quadrants[q.key][f] = p.quadrants[q.key][f];
-          });
-        }
-      });
-    }
-    return true;
-  }
-  return false;
-}
-
-// ===== PATCH save() to also cloud save =====
-const _origSave = save;
-function save() {
-  localStorage.setItem('bp_v3', JSON.stringify(state));
-  showToast();
-  saveToCloud(); // fire and forget
-}
-
-// ===== INIT =====
-window.sb.auth.onAuthStateChange(async (event, session) => {
-  if (session?.user) {
-    document.getElementById('auth-screen').style.display = 'none';
-    document.getElementById('menu-name').textContent = session.user.email;
-    load(); // load from localStorage first (instant)
-    await loadFromCloud(); // then overwrite with cloud data
-    renderQuadrants();
-    updateBattleReady();
-  } else {
-    document.getElementById('auth-screen').style.display = 'flex';
-  }
-});
-
-window.sb.auth.getSession().then(({ data: { session } }) => {
-  if (!session) {
-    document.getElementById('auth-screen').style.display = 'flex';
-  }
-});
+</script>
+</body>
+</html>
