@@ -149,6 +149,36 @@ main { padding-bottom: 40px; }
 .task-del:hover { color: #888; }
 .aar-daily-input { width: 100%; background: white; color: #1a1a1a; border: none; border-radius: 6px; padding: 14px; font-family: var(--font-body); font-size: 15px; line-height: 1.6; min-height: 120px; resize: none; outline: none; margin-top: 8px; }
 
+/* HAMBURGER MENU */
+.menu-overlay { position: fixed; inset: 0; background: #1a1a18; z-index: 500; display: flex; flex-direction: column; padding: 20px 24px 40px; transform: translateX(100%); transition: transform 0.28s ease; }
+.menu-overlay.open { transform: translateX(0); }
+.menu-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 48px; }
+.menu-profile { display: flex; align-items: center; gap: 14px; }
+.menu-avatar { width: 52px; height: 52px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; font-size: 24px; overflow: hidden; border: 2px solid #444; }
+.menu-name { font-family: var(--font-body); font-size: 20px; font-weight: 600; color: var(--text-light); }
+.menu-close { background: #2a2a26; border: none; color: var(--text-light); width: 40px; height: 40px; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
+.menu-close:hover { background: #3a3a36; }
+.menu-items { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; gap: 8px; }
+.menu-item { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 20px; cursor: pointer; border-radius: 8px; width: 100%; transition: background 0.15s; }
+.menu-item:hover { background: rgba(255,255,255,0.05); }
+.menu-item-inactive { opacity: 0.35; cursor: default; }
+.menu-item-inactive:hover { background: none; }
+.menu-item-icon { font-size: 36px; line-height: 1; }
+.menu-item-label { font-family: var(--font-display); font-size: 28px; letter-spacing: 4px; color: var(--text-light); }
+
+/* VISION MODAL */
+.vision-modal { position: fixed; inset: 0; background: #1a1a18; z-index: 600; display: flex; align-items: center; justify-content: center; padding: 40px 24px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+.vision-modal.open { opacity: 1; pointer-events: all; }
+.vision-modal-inner { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 480px; }
+.vision-modal-check { font-size: 44px; margin-bottom: 20px; color: var(--text-light); }
+.vision-modal-title { font-family: var(--font-display); font-size: 48px; letter-spacing: 4px; text-align: center; margin-bottom: 14px; }
+.vision-modal-divider { width: 80px; height: 1px; background: rgba(255,255,255,0.3); margin-bottom: 28px; }
+.vision-modal-text { font-family: var(--font-body); font-size: 16px; line-height: 1.75; text-align: center; color: var(--text-muted); margin-bottom: 40px; max-height: 45vh; overflow-y: auto; }
+.vision-modal-btn { background: white; color: #1a1a1a; border: none; border-radius: 40px; font-family: var(--font-cond); font-size: 16px; font-weight: 700; letter-spacing: 2px; padding: 16px 48px; cursor: pointer; margin-bottom: 18px; transition: opacity 0.15s; width: 100%; max-width: 280px; }
+.vision-modal-btn:hover { opacity: 0.9; }
+.vision-modal-edit { font-family: var(--font-body); font-size: 16px; color: var(--text-muted); background: none; border: none; cursor: pointer; padding: 8px; transition: color 0.15s; }
+.vision-modal-edit:hover { color: var(--text-light); }
+
 /* STATS PANEL */
 .stats-panel { padding: 8px 0 16px; }
 .stats-rings-row { display: flex; justify-content: space-around; align-items: center; }
@@ -269,12 +299,12 @@ main { padding-bottom: 40px; }
         <span class="plan-ends-label" id="plan-ends-label"></span>
         <button class="create-next-btn" onclick="startNextQuarter()">CREATE NEXT PLAN</button>
       </div>
-      <div class="daily-vision-row">
+      <div class="daily-vision-row" onclick="menuVision()" style="cursor:pointer">
         <span style="font-size:18px">🔭</span>
         <span class="daily-vision-text" id="daily-vision-preview">MY VISION</span>
-        <div style="display:flex;gap:8px;margin-left:auto">
+        <div style="display:flex;gap:8px;margin-left:auto" onclick="event.stopPropagation()">
           <button class="vision-icon-btn" onclick="downloadBattlePlan()" title="Download Battle Plan PDF">⬇</button>
-          <button class="vision-icon-btn" style="background:var(--orange)">↪</button>
+          <button class="vision-icon-btn" style="background:var(--orange)" onclick="shareBattlePlan()">↪</button>
         </div>
       </div>
     </div>
@@ -359,6 +389,47 @@ main { padding-bottom: 40px; }
 </main>
 
 <div class="save-toast" id="save-toast">SAVED ✓</div>
+
+<!-- HAMBURGER MENU OVERLAY -->
+<div class="menu-overlay" id="menu-overlay">
+  <div class="menu-top">
+    <div class="menu-profile">
+      <div class="menu-avatar">👤</div>
+      <div class="menu-name" id="menu-name">Battle Planner</div>
+    </div>
+    <button class="menu-close" onclick="closeMenu()">✕</button>
+  </div>
+  <div class="menu-items">
+    <div class="menu-item" onclick="menuVision()">
+      <div class="menu-item-icon">🔭</div>
+      <div class="menu-item-label">VISION</div>
+    </div>
+    <div class="menu-item" onclick="menuTracker()">
+      <div class="menu-item-icon">📋</div>
+      <div class="menu-item-label">TRACKER</div>
+    </div>
+    <div class="menu-item menu-item-inactive">
+      <div class="menu-item-icon">👥</div>
+      <div class="menu-item-label">MY TEAM</div>
+    </div>
+    <div class="menu-item menu-item-inactive">
+      <div class="menu-item-icon">⚙️</div>
+      <div class="menu-item-label">ACCOUNT</div>
+    </div>
+  </div>
+</div>
+
+<!-- VISION MODAL (from menu) -->
+<div class="vision-modal" id="vision-modal">
+  <div class="vision-modal-inner">
+    <div class="vision-modal-check">☑</div>
+    <div class="vision-modal-title">MY VISION</div>
+    <div class="vision-modal-divider"></div>
+    <div class="vision-modal-text" id="vision-modal-text"></div>
+    <button class="vision-modal-btn" onclick="closeVisionModal(); switchTab('daily')">GET TO WORK ›</button>
+    <button class="vision-modal-edit" onclick="closeVisionModal(); switchTab('vision')">Edit Vision</button>
+  </div>
+</div>
 
 <!-- BATTLE READY MODAL -->
 <div class="modal-overlay" id="battle-ready-modal">
@@ -1183,9 +1254,58 @@ function saveDailyAAR() {
   save();
 }
 
-function showDailyMenu() {
-  // Could expand to a settings panel — for now switch to quadrants
-  switchTab('quadrants');
+function shareBattlePlan() {
+  const appUrl = 'https://shredgnar26.github.io/battle-planner/';
+  const vision = state.vision.short || state.vision.long?.slice(0, 120) || '';
+
+  const text = `My Battle Plan — Q${state.quarter}\n\n` +
+    (vision ? `VISION: "${vision}"\n\n` : '') +
+    QUADRANTS.map(q => {
+      const qSt = state.quadrants[q.key];
+      const obj = qSt.objective.text;
+      const tactic = qSt.primaryTactic.text;
+      return obj ? `${q.name}: ${obj}${tactic ? ' → ' + tactic : ''}` : null;
+    }).filter(Boolean).join('\n') +
+    `\n\nTrack yours: ${appUrl}`;
+
+  if (navigator.share) {
+    navigator.share({
+      title: 'My Battle Plan',
+      text: text,
+      url: appUrl,
+    }).catch(() => {});
+  } else {
+    // Fallback: copy to clipboard
+    navigator.clipboard.writeText(text).then(() => {
+      const t = document.getElementById('save-toast');
+      t.textContent = 'COPIED ✓';
+      t.classList.add('show');
+      clearTimeout(toastT);
+      toastT = setTimeout(() => { t.classList.remove('show'); t.textContent = 'SAVED ✓'; }, 2000);
+    });
+  }
+}
+  document.getElementById('menu-overlay').classList.add('open');
+}
+
+function closeMenu() {
+  document.getElementById('menu-overlay').classList.remove('open');
+}
+
+function menuTracker() {
+  closeMenu();
+  switchTab('daily');
+}
+
+function menuVision() {
+  closeMenu();
+  const text = state.vision.long || state.vision.short || 'No vision set yet. Go to Vision tab to write yours.';
+  document.getElementById('vision-modal-text').textContent = text;
+  document.getElementById('vision-modal').classList.add('open');
+}
+
+function closeVisionModal() {
+  document.getElementById('vision-modal').classList.remove('open');
 }
 
 // ===== VISION =====
