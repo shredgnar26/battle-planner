@@ -11,7 +11,7 @@
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndqeWhlaHV1Y21va2RrcHdpdWRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5NjE1MzMsImV4cCI6MjA5MDUzNzUzM30.g5ZF_qad1gM3eSZI8ohbZJBOAN7UIdtBtrwJ127Afpo'
   );
   document.getElementById('signin-btn').addEventListener('click', async () => {
-    const email = document.getElementById('auth-email').value.trim();
+    const email = document.getElementById('auth-email').value.trim();   
     const password = document.getElementById('auth-password').value.trim();
     if (!email || !password) { document.getElementById('auth-msg').textContent = 'Enter email and password.'; return; }
     document.getElementById('auth-msg').textContent = 'Signing in...';
@@ -418,15 +418,12 @@ main { padding-bottom: 40px; }
     style="width:100%;max-width:320px;background:#111110;border:1px solid #444;color:#f0ece0;
     font-family:'Barlow',sans-serif;font-size:16px;padding:14px 16px;border-radius:4px;
     outline:none;margin-bottom:12px;text-align:center"/>
+  <input id="auth-password" type="password" placeholder="Password" style="width:100%;max-width:320px;background:#111110;border:1px solid #444;color:#f0ece0;font-family:'Barlow',sans-serif;font-size:16px;padding:14px 16px;border-radius:4px;outline:none;margin-bottom:12px;text-align:center"/>
   <button id="signin-btn" style="
   width:100%;max-width:320px;background:#d4621a;color:white;border:none;
   border-radius:40px;font-family:'Barlow Condensed',sans-serif;font-size:16px;
   font-weight:700;letter-spacing:2px;padding:16px;cursor:pointer;margin-bottom:16px">
   SIGN IN / SIGN UP
-</button>
-    width:100%;max-width:320px;background:#d4621a;color:white;border:none;
-    border-radius:40px;font-family:'Barlow Condensed',sans-serif;font-size:16px;
-    font-weight:700;letter-spacing:2px;padding:16px;cursor:pointer;margin-bottom:16px">
     SIGN IN / SIGN UP
   </button>
   <div id="auth-msg" style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:#a09880;letter-spacing:1px;text-align:center"></div>
