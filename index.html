@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -335,6 +336,7 @@ main{padding-bottom:40px}
 </main>
 
 <!-- AUTH -->
+
 <div id="auth-screen">
   <div style="font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:4px;color:#f0ece0;margin-bottom:8px">BATTLE PLANNER</div>
   <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:2px;color:#a09880;margin-bottom:48px">ORDER OF MAN</div>
@@ -348,6 +350,7 @@ main{padding-bottom:40px}
 <div class="save-toast" id="save-toast">SAVED &#10003;</div>
 
 <!-- HAMBURGER MENU -->
+
 <div class="menu-overlay" id="menu-overlay">
   <div class="mpbar">
     <div class="mpleft">
@@ -377,6 +380,7 @@ main{padding-bottom:40px}
 </div>
 
 <!-- ACCOUNT SCREEN -->
+
 <div class="acct-screen" id="account-screen">
   <div class="acct-tbar">
     <button class="acct-back" onclick="closeAccount()">&#8592;</button>
@@ -415,6 +419,7 @@ main{padding-bottom:40px}
 </div>
 
 <!-- EDIT INFO SCREEN -->
+
 <div class="edit-screen" id="edit-screen">
   <div class="edit-hdr">
     <button class="edit-back" onclick="closeEditInfo()">&#8592;</button>
@@ -440,6 +445,7 @@ main{padding-bottom:40px}
 </div>
 
 <!-- VISION MODAL -->
+
 <div class="vmodal" id="vision-modal">
   <div class="vmi">
     <div class="vmi-chk">&#9745;</div>
@@ -452,6 +458,7 @@ main{padding-bottom:40px}
 </div>
 
 <!-- BATTLE READY MODAL -->
+
 <div class="modal-overlay" id="battle-ready-modal">
   <div class="mchk">&#9745;</div>
   <div class="mttl">YOU ARE BATTLE-READY</div>
@@ -462,6 +469,7 @@ main{padding-bottom:40px}
 </div>
 
 <!-- START DATE SCREEN -->
+
 <div class="sd-screen" id="start-date-screen">
   <div class="sd-bg">
     <div class="sd-title">SELECT START DATE</div>
@@ -518,165 +526,164 @@ function updateQInfo(sd){const end=getQEnd(sd);const ql=getQL(sd);const dl=Math.
 function confirmStartDate(){const today=new Date();const d=selOpt==='today'?today:new Date(today.getFullYear(),today.getMonth(),today.getDate()+1);state.startDate=d.toISOString().split('T')[0];state.quarterEnd=getQEnd(d).toISOString().split('T')[0];state.modalDismissed=true;save();document.getElementById('start-date-screen').classList.remove('show');switchTab('daily');}
 function renderQ(){const c=document.getElementById('tab-quadrants');c.innerHTML='';QUADRANTS.forEach(q=>{const qSt=state.quadrants[q.key];const fc=FIELDS.filter(f=>qSt[f].finalized).length;const pct=Math.round((fc/FIELDS.length)*100);const circ=2*Math.PI*22;const offset=circ-(pct/100)*circ;const block=document.createElement('div');block.className='qblock';block.style.background=q.bg;const pills=FIELDS.map(f=>`<div class="qpill ${qSt[f].finalized?'filled':''}"></div>`).join('');block.innerHTML=`<div class="qhdr" onclick="toggleQ('${q.key}')"><div class="qhl"><div class="qico">${q.icon}</div><div><div class="qtitle">${q.name}</div><div class="qsub">${q.subtitle}</div><div class="qpills">${pills}</div></div></div><svg class="qring" viewBox="0 0 56 56"><circle class="ring-bg" cx="28" cy="28" r="22"/><circle class="ring-fill" cx="28" cy="28" r="22" stroke="${q.accent}" stroke-dasharray="${circ.toFixed(1)}" stroke-dashoffset="${offset.toFixed(1)}"/><text class="ring-text" x="28" y="29">${pct}%</text></svg></div><div class="qbody" id="qbody-${q.key}">${buildQBody(q,qSt)}</div><div class="qchev" id="qchev-${q.key}">&#9660;</div>`;c.appendChild(block);});}
 function buildQBody(q,qSt){const secs=[{field:'objective',title:'12-WEEK OBJECTIVE',desc:q.objDesc,ex:q.objExample},{field:'primaryTactic',title:'PRIMARY TACTIC',desc:q.tacticDesc,ex:q.tacticExample},{field:'secondaryTactic',title:'SECONDARY TACTIC',desc:'Optional supporting action - weekly or a few times per week.',ex:q.secExample},{field:'cp30',title:'30-DAY CHECKPOINT',desc:q.cp30Desc,ex:q.cp30Example},{field:'cp60',title:'60-DAY CHECKPOINT',desc:'',ex:q.cp60Example}];return`<div class="qintro" id="info-${q.key}"><p class="qintro-text">${q.intro}</p><button class="hide-info-btn" onclick="toggleInfo('${q.key}')">HIDE INFO</button></div><button class="show-info-btn" id="show-${q.key}" style="display:none" onclick="toggleInfo('${q.key}')">SHOW INFO</button>`+secs.map(s=>{const fs=qSt[s.field];return`<div class="qsec"><div class="qsec-hdr"><div class="qsec-title">${s.title}</div><div class="sbadge ${fs.finalized?'final':''}">${fs.finalized?'Finalized':'Draft'}</div></div>${s.desc?`<div class="qdesc">${s.desc}</div>`:''}<div class="qex"><strong>Example:</strong> ${s.ex}</div><textarea class="qinput" rows="2" placeholder="${s.ex}" oninput="updateField('${q.key}','${s.field}',this.value)">${esc(fs.text)}</textarea><button class="finbtn ${fs.finalized?'finalized':''}" onclick="finalizeField('${q.key}','${s.field}')">${fs.finalized?'FINALIZED':'FINALIZE'}</button></div>`;}).join('');}
-function toggleInfo(key){const b=document.getElementById('info-'+key);const s=document.getElementById('show-'+key);const v=b.style.display!=='none';b.style.display=v?'none':'block';s.style.display=v?'block':'none';}
-function toggleQ(key){const body=document.getElementById('qbody-'+key);const chev=document.getElementById('qchev-'+key);const open=body.classList.toggle('open');chev.classList.toggle('open',open);}
+
+function toggleInfo(key){const b=document.getElementById(‘info-’+key);const s=document.getElementById(‘show-’+key);const v=b.style.display!==‘none’;b.style.display=v?‘none’:‘block’;s.style.display=v?‘block’:‘none’;}
+function toggleQ(key){const body=document.getElementById(‘qbody-’+key);const chev=document.getElementById(‘qchev-’+key);const open=body.classList.toggle(‘open’);chev.classList.toggle(‘open’,open);}
 function updateField(key,field,val){state.quadrants[key][field].text=val;if(state.quadrants[key][field].finalized)state.quadrants[key][field].finalized=false;save();updateBR();}
-function finalizeField(key,field){const f=state.quadrants[key][field];if(!f.text.trim()){alert('Add content before finalizing.');return;}f.finalized=!f.finalized;save();renderQ();const body=document.getElementById('qbody-'+key);const chev=document.getElementById('qchev-'+key);if(body){body.classList.add('open');chev.classList.add('open');}updateBR();}
+function finalizeField(key,field){const f=state.quadrants[key][field];if(!f.text.trim()){alert(‘Add content before finalizing.’);return;}f.finalized=!f.finalized;save();renderQ();const body=document.getElementById(‘qbody-’+key);const chev=document.getElementById(‘qchev-’+key);if(body){body.classList.add(‘open’);chev.classList.add(‘open’);}updateBR();}
 let openQs=new Set();
-function dayKey(offset){const d=new Date();d.setDate(d.getDate()+offset);return d.toISOString().split('T')[0];}
-function dateFromKey(dk){const[y,m,d]=dk.split('-').map(Number);return new Date(y,m-1,d);}
-function fmtHD(dk){return dateFromKey(dk).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}).toUpperCase();}
+function dayKey(offset){const d=new Date();d.setDate(d.getDate()+offset);return d.toISOString().split(‘T’)[0];}
+function dateFromKey(dk){const[y,m,d]=dk.split(’-’).map(Number);return new Date(y,m-1,d);}
+function fmtHD(dk){return dateFromKey(dk).toLocaleDateString(‘en-US’,{weekday:‘short’,month:‘short’,day:‘numeric’}).toUpperCase();}
 function changeDay(delta){cdo+=delta;renderDaily();}
-function getDailyData(dk){if(!state.daily[dk])state.daily[dk]={quadrants:{},nonNeg:[],todayTasks:[],aar:'',cpChecks:{}};const d=state.daily[dk];if(!d.quadrants)d.quadrants={};if(!d.nonNeg)d.nonNeg=[];if(!d.todayTasks)d.todayTasks=[];if(!d.aar)d.aar='';if(!d.cpChecks)d.cpChecks={};QUADRANTS.forEach(q=>{if(!d.quadrants[q.key])d.quadrants[q.key]={primary:'',secondary:''};});return d;}
-function getWeekDates(dk){const d=dateFromKey(dk);const dow=d.getDay();const days=[];for(let i=0;i<7;i++){const day=new Date(d);day.setDate(d.getDate()-dow+i);days.push(day.toISOString().split('T')[0]);}return days;}
+function getDailyData(dk){if(!state.daily[dk])state.daily[dk]={quadrants:{},nonNeg:[],todayTasks:[],aar:’’,cpChecks:{}};const d=state.daily[dk];if(!d.quadrants)d.quadrants={};if(!d.nonNeg)d.nonNeg=[];if(!d.todayTasks)d.todayTasks=[];if(!d.aar)d.aar=’’;if(!d.cpChecks)d.cpChecks={};QUADRANTS.forEach(q=>{if(!d.quadrants[q.key])d.quadrants[q.key]={primary:’’,secondary:’’};});return d;}
+function getWeekDates(dk){const d=dateFromKey(dk);const dow=d.getDay();const days=[];for(let i=0;i<7;i++){const day=new Date(d);day.setDate(d.getDate()-dow+i);days.push(day.toISOString().split(‘T’)[0]);}return days;}
 function getPED(){if(!state.quarterEnd)return null;const today=new Date();today.setHours(0,0,0,0);const end=dateFromKey(state.quarterEnd);end.setHours(0,0,0,0);return Math.round((end-today)/(1000*60*60*24));}
-function calcStats(qKey,wd){let wdn=0;wd.forEach(wdk=>{if(state.daily[wdk]?.quadrants?.[qKey]?.primary==='done')wdn++;});let qd=0,qt=0;if(state.startDate){const start=dateFromKey(state.startDate);const end=state.quarterEnd?dateFromKey(state.quarterEnd):new Date();const today=new Date();today.setHours(0,0,0,0);const cap=end<today?end:today;for(let d=new Date(start);d<=cap;d.setDate(d.getDate()+1)){const dk=d.toISOString().split('T')[0];qt++;if(state.daily[dk]?.quadrants?.[qKey]?.primary==='done')qd++;}}const allDays=Object.keys(state.daily);let ld=0;allDays.forEach(dk=>{if(state.daily[dk]?.quadrants?.[qKey]?.primary==='done')ld++;});return{week:Math.round((wdn/7)*100),quarter:qt>0?Math.round((qd/qt)*100):0,lifetime:allDays.length>0?Math.round((ld/allDays.length)*100):0};}
-function buildStatsRings(qKey,wd){const s=calcStats(qKey,wd);const rings=[{label:'WEEK',pct:s.week},{label:'QUARTER',pct:s.quarter},{label:'LIFETIME',pct:s.lifetime}];const r=38,circ=2*Math.PI*r;return`<div class="stats-rings">`+rings.map(ring=>{const offset=circ-(ring.pct/100)*circ;return`<div class="sring-cell"><svg width="96" height="96" viewBox="0 0 96 96"><circle cx="48" cy="48" r="${r}" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="6"/><circle cx="48" cy="48" r="${r}" fill="none" stroke="white" stroke-width="6" stroke-linecap="round" stroke-dasharray="${circ.toFixed(1)}" stroke-dashoffset="${offset.toFixed(1)}" transform="rotate(-90 48 48)"/><text x="48" y="52" text-anchor="middle" dominant-baseline="middle" font-family="'Barlow Condensed',sans-serif" font-size="17" font-weight="700" fill="white">${ring.pct}%</text></svg><div class="sring-lbl">${ring.label}</div></div>`;}).join('')+`</div>`;}
-function toggleStats(qKey){const panel=document.getElementById('stats-'+qKey);const grid=document.getElementById('wgrid-'+qKey);const sk=qKey+'_stats';const isOpen=openQs.has(sk);if(isOpen){openQs.delete(sk);panel.style.display='none';grid.style.display='flex';}else{openQs.add(sk);panel.style.display='block';grid.style.display='none';}}
-function renderDaily(){const dk=dayKey(cdo);const dayData=getDailyData(dk);const todayDk=dayKey(0);document.getElementById('daily-date-display').textContent=fmtHD(dk);const dl=getPED();const pl=document.getElementById('plan-ends-label');if(dl!==null)pl.textContent=dl>=0?`Plan Ends: ${dl} day${dl===1?'':'s'}`:'Plan Ended';else pl.textContent='No plan started yet';document.getElementById('daily-vision-preview').textContent=state.vision.short||state.vision.long?.slice(0,60)||'MY VISION';const container=document.getElementById('daily-quadrant-cards');container.innerHTML='';const weekDates=getWeekDates(dk);
-QUADRANTS.forEach(q=>{const qSt=state.quadrants[q.key];const dqData=dayData.quadrants[q.key];const primaryDone=dqData.primary==='done';let weekDone=0;weekDates.forEach(wdk=>{if(getDailyData(wdk).quadrants[q.key]?.primary==='done')weekDone++;});const allDays=Object.keys(state.daily);let totalDone=0;allDays.forEach(d=>{if(state.daily[d]?.quadrants?.[q.key]?.primary==='done')totalDone++;});const card=document.createElement('div');card.className='dqcard';card.style.background=q.bg;const pillsHtml=Array.from({length:84},(_,i)=>`<div class="dqpill ${i<Math.min(totalDone,84)?'done':''}"></div>`).join('');const DAY_LABELS=['SU','M','T','W','TH','F','S'];const weekCells=weekDates.map((wdk,wi)=>{const wDate=dateFromKey(wdk);const wDay=wDate.getDate();const wStatus=getDailyData(wdk).quadrants[q.key]?.primary;const isWToday=wdk===todayDk;return`<div class="wday-cell"><div class="wday-box${isWToday?' today':''}${wStatus==='done'?' done':''}" onclick="toggleWeekDay('${wdk}','${q.key}')">${DAY_LABELS[wi]}</div><div class="wday-num${isWToday?' tlbl':''}">${isWToday?'TODAY':wDay}</div></div>`;}).join('');const cp30c=dayData.cpChecks?.[q.key+'_cp30']||false;const cp60c=dayData.cpChecks?.[q.key+'_cp60']||false;
+function calcStats(qKey,wd){let wdn=0;wd.forEach(wdk=>{if(state.daily[wdk]?.quadrants?.[qKey]?.primary===‘done’)wdn++;});let qd=0,qt=0;if(state.startDate){const start=dateFromKey(state.startDate);const end=state.quarterEnd?dateFromKey(state.quarterEnd):new Date();const today=new Date();today.setHours(0,0,0,0);const cap=end<today?end:today;for(let d=new Date(start);d<=cap;d.setDate(d.getDate()+1)){const dk=d.toISOString().split(‘T’)[0];qt++;if(state.daily[dk]?.quadrants?.[qKey]?.primary===‘done’)qd++;}}const allDays=Object.keys(state.daily);let ld=0;allDays.forEach(dk=>{if(state.daily[dk]?.quadrants?.[qKey]?.primary===‘done’)ld++;});return{week:Math.round((wdn/7)*100),quarter:qt>0?Math.round((qd/qt)*100):0,lifetime:allDays.length>0?Math.round((ld/allDays.length)*100):0};}
+function buildStatsRings(qKey,wd){const s=calcStats(qKey,wd);const rings=[{label:‘WEEK’,pct:s.week},{label:‘QUARTER’,pct:s.quarter},{label:‘LIFETIME’,pct:s.lifetime}];const r=38,circ=2*Math.PI*r;return`<div class="stats-rings">`+rings.map(ring=>{const offset=circ-(ring.pct/100)*circ;return`<div class="sring-cell"><svg width="96" height="96" viewBox="0 0 96 96"><circle cx="48" cy="48" r="${r}" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="6"/><circle cx="48" cy="48" r="${r}" fill="none" stroke="white" stroke-width="6" stroke-linecap="round" stroke-dasharray="${circ.toFixed(1)}" stroke-dashoffset="${offset.toFixed(1)}" transform="rotate(-90 48 48)"/><text x="48" y="52" text-anchor="middle" dominant-baseline="middle" font-family="'Barlow Condensed',sans-serif" font-size="17" font-weight="700" fill="white">${ring.pct}%</text></svg><div class="sring-lbl">${ring.label}</div></div>`;}).join(’’)+`</div>`;}
+function toggleStats(qKey){const panel=document.getElementById(‘stats-’+qKey);const grid=document.getElementById(‘wgrid-’+qKey);const sk=qKey+’*stats’;const isOpen=openQs.has(sk);if(isOpen){openQs.delete(sk);panel.style.display=‘none’;grid.style.display=‘flex’;}else{openQs.add(sk);panel.style.display=‘block’;grid.style.display=‘none’;}}
+function renderDaily(){const dk=dayKey(cdo);const dayData=getDailyData(dk);const todayDk=dayKey(0);document.getElementById(‘daily-date-display’).textContent=fmtHD(dk);const dl=getPED();const pl=document.getElementById(‘plan-ends-label’);if(dl!==null)pl.textContent=dl>=0?`Plan Ends: ${dl} day${dl===1?'':'s'}`:‘Plan Ended’;else pl.textContent=‘No plan started yet’;document.getElementById(‘daily-vision-preview’).textContent=state.vision.short||state.vision.long?.slice(0,60)||‘MY VISION’;const container=document.getElementById(‘daily-quadrant-cards’);container.innerHTML=’’;const weekDates=getWeekDates(dk);
+QUADRANTS.forEach(q=>{const qSt=state.quadrants[q.key];const dqData=dayData.quadrants[q.key];const primaryDone=dqData.primary===‘done’;let weekDone=0;weekDates.forEach(wdk=>{if(getDailyData(wdk).quadrants[q.key]?.primary===‘done’)weekDone++;});const allDays=Object.keys(state.daily);let totalDone=0;allDays.forEach(d=>{if(state.daily[d]?.quadrants?.[q.key]?.primary===‘done’)totalDone++;});const card=document.createElement(‘div’);card.className=‘dqcard’;card.style.background=q.bg;const pillsHtml=Array.from({length:84},(*,i)=>`<div class="dqpill ${i<Math.min(totalDone,84)?'done':''}"></div>`).join(’’);const DAY_LABELS=[‘SU’,‘M’,‘T’,‘W’,‘TH’,‘F’,‘S’];const weekCells=weekDates.map((wdk,wi)=>{const wDate=dateFromKey(wdk);const wDay=wDate.getDate();const wStatus=getDailyData(wdk).quadrants[q.key]?.primary;const isWToday=wdk===todayDk;return`<div class="wday-cell"><div class="wday-box${isWToday?' today':''}${wStatus==='done'?' done':''}" onclick="toggleWeekDay('${wdk}','${q.key}')">${DAY_LABELS[wi]}</div><div class="wday-num${isWToday?' tlbl':''}">${isWToday?'TODAY':wDay}</div></div>`;}).join(’’);const cp30c=dayData.cpChecks?.[q.key+’_cp30’]||false;const cp60c=dayData.cpChecks?.[q.key+’_cp60’]||false;
 card.innerHTML=`<div class="dqhdr" onclick="toggleDQ('${q.key}')"><div class="dqico">${q.icon}</div><div class="dqinfo"><div class="dqname">${q.name}</div><div class="dqtactic">${esc(qSt.primaryTactic.text)||'No tactic set'}</div><div class="dqpills">${pillsHtml}</div></div><div class="dq-tbtn" onclick="event.stopPropagation();toggleTodayCheck('${dk}','${q.key}')"><div class="dq-tchk ${primaryDone?'checked':''}">&#10003;</div><div class="dq-tlbl">TODAY</div></div></div><div class="dqbody" id="dqbody-${q.key}"><div class="dq-wrow"><div class="dq-wlbl">THIS WEEK: ${weekDone}/7 Days Complete</div><div class="dq-wicos"><div class="dq-wico ${openQs.has(q.key+'_stats')?'active':''}" onclick="event.stopPropagation();toggleStats('${q.key}')">&#128202;</div><div class="dq-wico">&#128101;</div></div></div><div class="stats-panel" id="stats-${q.key}" style="display:none">${buildStatsRings(q.key,weekDates)}</div><div class="week-grid" id="wgrid-${q.key}">${weekCells}</div><div class="dq-det"><div class="dq-dl"><div class="dq-dlbl">12-WEEK OBJECTIVE</div><div class="dq-dval ${!qSt.objective.text?'empty':''}">${esc(qSt.objective.text)||'Not set'}</div></div></div><div class="dq-det"><div class="dq-dl"><div class="dq-dlbl">PRIMARY TACTIC</div><div class="dq-dval ${!qSt.primaryTactic.text?'empty':''}">${esc(qSt.primaryTactic.text)||'Not set'}</div></div></div><div class="dq-det"><div class="dq-dl"><div class="dq-dlbl">30-DAY CHECKPOINT</div><div class="dq-dval ${!qSt.cp30.text?'empty':''}">${esc(qSt.cp30.text)||'Not set'}</div></div><div class="dq-cpchk ${cp30c?'checked':''}" onclick="toggleCpCheck('${dk}','${q.key}_cp30')">&#10003;</div></div><div class="dq-det"><div class="dq-dl"><div class="dq-dlbl">60-DAY CHECKPOINT</div><div class="dq-dval ${!qSt.cp60.text?'empty':''}">${esc(qSt.cp60.text)||'Not set'}</div></div><div class="dq-cpchk ${cp60c?'checked':''}" onclick="toggleCpCheck('${dk}','${q.key}_cp60')">&#10003;</div></div><div class="dq-rrow"><div class="dq-dlbl">DAILY REMINDER</div><div style="font-family:var(--fc);font-size:13px;opacity:.5">Off</div><div class="dq-cpchk" style="opacity:.4">&#128276;</div></div><button class="dq-eplan" onclick="switchTab('quadrants')">Edit Plan</button></div><div class="dqchev" id="dqchev-${q.key}">&#9660;</div>`;
 container.appendChild(card);});
-openQs.forEach(key=>{if(key.endsWith('_stats')){const qk=key.replace('_stats','');const panel=document.getElementById('stats-'+qk);const grid=document.getElementById('wgrid-'+qk);if(panel)panel.style.display='block';if(grid)grid.style.display='none';}else{const body=document.getElementById('dqbody-'+key);const chev=document.getElementById('dqchev-'+key);if(body)body.classList.add('open');if(chev)chev.classList.add('open');}});
-renderNonNeg(dk,dayData);renderTodayTasks(dk,dayData);const aarEl=document.getElementById('daily-aar-text');if(aarEl)aarEl.value=dayData.aar||'';}
-function toggleDQ(key){if(openQs.has(key))openQs.delete(key);else openQs.add(key);const body=document.getElementById('dqbody-'+key);const chev=document.getElementById('dqchev-'+key);if(body)body.classList.toggle('open',openQs.has(key));if(chev)chev.classList.toggle('open',openQs.has(key));}
-function toggleTodayCheck(dk,qKey){const d=getDailyData(dk);d.quadrants[qKey].primary=d.quadrants[qKey].primary==='done'?'':'done';save();renderDaily();}
-function toggleWeekDay(wdk,qKey){const d=getDailyData(wdk);d.quadrants[qKey].primary=d.quadrants[qKey].primary==='done'?'':'done';save();renderDaily();}
+openQs.forEach(key=>{if(key.endsWith(’_stats’)){const qk=key.replace(’_stats’,’’);const panel=document.getElementById(‘stats-’+qk);const grid=document.getElementById(‘wgrid-’+qk);if(panel)panel.style.display=‘block’;if(grid)grid.style.display=‘none’;}else{const body=document.getElementById(‘dqbody-’+key);const chev=document.getElementById(‘dqchev-’+key);if(body)body.classList.add(‘open’);if(chev)chev.classList.add(‘open’);}});
+renderNonNeg(dk,dayData);renderTodayTasks(dk,dayData);const aarEl=document.getElementById(‘daily-aar-text’);if(aarEl)aarEl.value=dayData.aar||’’;}
+function toggleDQ(key){if(openQs.has(key))openQs.delete(key);else openQs.add(key);const body=document.getElementById(‘dqbody-’+key);const chev=document.getElementById(‘dqchev-’+key);if(body)body.classList.toggle(‘open’,openQs.has(key));if(chev)chev.classList.toggle(‘open’,openQs.has(key));}
+function toggleTodayCheck(dk,qKey){const d=getDailyData(dk);d.quadrants[qKey].primary=d.quadrants[qKey].primary===‘done’?’’:‘done’;save();renderDaily();}
+function toggleWeekDay(wdk,qKey){const d=getDailyData(wdk);d.quadrants[qKey].primary=d.quadrants[qKey].primary===‘done’?’’:‘done’;save();renderDaily();}
 function toggleCpCheck(dk,key){const d=getDailyData(dk);d.cpChecks[key]=!d.cpChecks[key];save();renderDaily();}
-function renderNonNeg(dk,dayData){const list=document.getElementById('non-neg-list');if(!list)return;list.innerHTML='';(state.nonNeg||[]).forEach((task,i)=>{const done=dayData.nonNeg?.[i]||false;const div=document.createElement('div');div.className='task-item';div.innerHTML=`<div class="tchk ${done?'done':''}" onclick="toggleNonNeg('${dk}',${i})">&#10003;</div><input class="tinp ${done?'done-text':''}" value="${esc(task)}" placeholder="Task..." oninput="updateNonNegText(${i},this.value)"/><button class="tdel" onclick="deleteNonNeg(${i})">&#215;</button>`;list.appendChild(div);});}
-function addNonNeg(){if(!state.nonNeg)state.nonNeg=[];state.nonNeg.push('');save();renderDaily();setTimeout(()=>{const inputs=document.querySelectorAll('#non-neg-list .tinp');if(inputs.length)inputs[inputs.length-1].focus();},50);}
+function renderNonNeg(dk,dayData){const list=document.getElementById(‘non-neg-list’);if(!list)return;list.innerHTML=’’;(state.nonNeg||[]).forEach((task,i)=>{const done=dayData.nonNeg?.[i]||false;const div=document.createElement(‘div’);div.className=‘task-item’;div.innerHTML=`<div class="tchk ${done?'done':''}" onclick="toggleNonNeg('${dk}',${i})">&#10003;</div><input class="tinp ${done?'done-text':''}" value="${esc(task)}" placeholder="Task..." oninput="updateNonNegText(${i},this.value)"/><button class="tdel" onclick="deleteNonNeg(${i})">&#215;</button>`;list.appendChild(div);});}
+function addNonNeg(){if(!state.nonNeg)state.nonNeg=[];state.nonNeg.push(’’);save();renderDaily();setTimeout(()=>{const inputs=document.querySelectorAll(’#non-neg-list .tinp’);if(inputs.length)inputs[inputs.length-1].focus();},50);}
 function updateNonNegText(i,val){if(!state.nonNeg)state.nonNeg=[];state.nonNeg[i]=val;save();}
 function deleteNonNeg(i){state.nonNeg.splice(i,1);save();renderDaily();}
 function toggleNonNeg(dk,i){const d=getDailyData(dk);if(!d.nonNeg)d.nonNeg=[];d.nonNeg[i]=!d.nonNeg[i];save();renderDaily();}
-function renderTodayTasks(dk,dayData){const list=document.getElementById('todays-tasks-list');if(!list)return;list.innerHTML='';(dayData.todayTasks||[]).forEach((task,i)=>{const div=document.createElement('div');div.className='task-item';div.innerHTML=`<div class="tchk ${task.done?'done':''}" onclick="toggleTodayTask('${dk}',${i})">&#10003;</div><input class="tinp ${task.done?'done-text':''}" value="${esc(task.text)}" placeholder="Task..." oninput="updateTodayTaskText('${dk}',${i},this.value)"/><button class="tdel" onclick="deleteTodayTask('${dk}',${i})">&#215;</button>`;list.appendChild(div);});}
-function addTodayTask(){const dk=dayKey(cdo);const d=getDailyData(dk);d.todayTasks.push({text:'',done:false});save();renderDaily();setTimeout(()=>{const inputs=document.querySelectorAll('#todays-tasks-list .tinp');if(inputs.length)inputs[inputs.length-1].focus();},50);}
+function renderTodayTasks(dk,dayData){const list=document.getElementById(‘todays-tasks-list’);if(!list)return;list.innerHTML=’’;(dayData.todayTasks||[]).forEach((task,i)=>{const div=document.createElement(‘div’);div.className=‘task-item’;div.innerHTML=`<div class="tchk ${task.done?'done':''}" onclick="toggleTodayTask('${dk}',${i})">&#10003;</div><input class="tinp ${task.done?'done-text':''}" value="${esc(task.text)}" placeholder="Task..." oninput="updateTodayTaskText('${dk}',${i},this.value)"/><button class="tdel" onclick="deleteTodayTask('${dk}',${i})">&#215;</button>`;list.appendChild(div);});}
+function addTodayTask(){const dk=dayKey(cdo);const d=getDailyData(dk);d.todayTasks.push({text:’’,done:false});save();renderDaily();setTimeout(()=>{const inputs=document.querySelectorAll(’#todays-tasks-list .tinp’);if(inputs.length)inputs[inputs.length-1].focus();},50);}
 function updateTodayTaskText(dk,i,val){const d=getDailyData(dk);d.todayTasks[i].text=val;save();}
 function toggleTodayTask(dk,i){const d=getDailyData(dk);d.todayTasks[i].done=!d.todayTasks[i].done;save();renderDaily();}
 function deleteTodayTask(dk,i){const d=getDailyData(dk);d.todayTasks.splice(i,1);save();renderDaily();}
-function saveDailyAAR(){const dk=dayKey(cdo);const d=getDailyData(dk);d.aar=document.getElementById('daily-aar-text').value;save();}
-function shareBattlePlan(){const appUrl='https://shredgnar26.github.io/battle-planner/';const vision=state.vision.short||state.vision.long?.slice(0,120)||'';const text=`My Battle Plan - Q${state.quarter}\n\n`+(vision?`VISION: "${vision}"\n\n`:'')+QUADRANTS.map(q=>{const qSt=state.quadrants[q.key];const obj=qSt.objective.text;const tactic=qSt.primaryTactic.text;return obj?`${q.name}: ${obj}${tactic?' - '+tactic:''}`:null;}).filter(Boolean).join('\n')+`\n\nTrack yours: ${appUrl}`;if(navigator.share)navigator.share({title:'My Battle Plan',text,url:appUrl}).catch(()=>{});else navigator.clipboard.writeText(text).then(()=>{const t=document.getElementById('save-toast');t.textContent='COPIED';t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>{t.classList.remove('show');t.textContent='SAVED';},2000);});}
-function closeVisionModal(){document.getElementById('vision-modal').classList.remove('open');}
-function saveVision(){state.vision.long=document.getElementById('vision-long').value;state.vision.short=document.getElementById('vision-short').value;const prev=document.getElementById('vision-preview');const text=state.vision.short||state.vision.long;if(text){prev.textContent=text;prev.className='vprev';}else{prev.textContent='Your vision will appear here...';prev.className='vprev empty';}save();updateBR();}
-function renderVisionTab(){document.getElementById('vision-long').value=state.vision.long;document.getElementById('vision-short').value=state.vision.short;saveVision();}
-function saveAAR(){state.aar.win=document.getElementById('aar-win').value;state.aar.loss=document.getElementById('aar-loss').value;state.aar.adj=document.getElementById('aar-adj').value;state.aar.next=document.getElementById('aar-next').value;save();}
-function renderAARTab(){document.getElementById('aar-win').value=state.aar.win;document.getElementById('aar-loss').value=state.aar.loss;document.getElementById('aar-adj').value=state.aar.adj;document.getElementById('aar-next').value=state.aar.next;document.getElementById('aar-score-display').textContent=state.aar.score!==null?state.aar.score:'--';}
-function adjustScore(delta){let s=state.aar.score===null?5:state.aar.score;s=Math.max(1,Math.min(10,s+delta));state.aar.score=s;document.getElementById('aar-score-display').textContent=s;save();}
-function startNextQuarter(){if(!confirm('End Q'+state.quarter+' and start Q'+(state.quarter+1)+'? Objectives and tactics reset. Vision and AAR preserved.'))return;state.quarter++;QUADRANTS.forEach(q=>{state.quadrants[q.key]={};FIELDS.forEach(f=>{state.quadrants[q.key][f]={text:'',finalized:false};});});state.aar={win:'',loss:'',adj:'',next:'',score:null};state.startDate=null;state.quarterEnd=null;state.modalDismissed=false;save();renderQ();updateBR();switchTab('quadrants');}
-function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function downloadBattlePlan(){const Q_COLORS={calibration:'#7a7245',connection:'#7a4a22',condition:'#2a4f6e',contribution:'#4a5a2a'};const today=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});const qLabel=state.startDate?getQL(dateFromKey(state.startDate)):'Q'+state.quarter;const qYear=state.startDate?dateFromKey(state.startDate).getFullYear():new Date().getFullYear();const startFmt=state.startDate?dateFromKey(state.startDate).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'--';const endFmt=state.quarterEnd?dateFromKey(state.quarterEnd).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'--';const ep=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');const visionHtml=`<div class="section vision-section"><div class="section-label">COMPELLING VISION</div><div class="vision-text">${ep(state.vision.long)||'<em>Not set</em>'}</div>${state.vision.short?`<div class="vision-short">"${ep(state.vision.short)}"</div>`:''}</div>`;const quadrantsHtml=QUADRANTS.map(q=>{const qSt=state.quadrants[q.key];const bg=Q_COLORS[q.key];return`<div class="q-block" style="border-left:6px solid ${bg}"><div class="q-block-header" style="color:${bg}">${q.icon} ${q.name}</div><div class="q-block-sub">${q.subtitle}</div><table class="q-table"><tr><td class="field-label">12-WEEK OBJECTIVE</td><td>${ep(qSt.objective.text)||'<em>Not set</em>'}</td></tr><tr><td class="field-label">PRIMARY TACTIC</td><td>${ep(qSt.primaryTactic.text)||'<em>Not set</em>'}</td></tr><tr><td class="field-label">SECONDARY TACTIC</td><td>${ep(qSt.secondaryTactic.text)||'<em>Not set</em>'}</td></tr><tr><td class="field-label">30-DAY CHECKPOINT</td><td>${ep(qSt.cp30.text)||'<em>Not set</em>'}</td></tr><tr><td class="field-label">60-DAY CHECKPOINT</td><td>${ep(qSt.cp60.text)||'<em>Not set</em>'}</td></tr></table></div>`;}).join('');const nonNegHtml=(state.nonNeg||[]).length>0?`<div class="section"><div class="section-label">DAILY NON-NEGOTIABLES</div><ul class="task-list">${state.nonNeg.map(t=>`<li>${ep(t)}</li>`).join('')}</ul></div>`:'';const aarHtml=(state.aar.win||state.aar.loss||state.aar.adj||state.aar.next)?`<div class="section"><div class="section-label">AFTER ACTION REVIEW</div><table class="q-table">${state.aar.win?`<tr><td class="field-label">WHAT WENT WELL</td><td>${ep(state.aar.win)}</td></tr>`:''}${state.aar.loss?`<tr><td class="field-label">WHAT DIDN'T</td><td>${ep(state.aar.loss)}</td></tr>`:''}${state.aar.adj?`<tr><td class="field-label">ADJUSTMENTS</td><td>${ep(state.aar.adj)}</td></tr>`:''}${state.aar.next?`<tr><td class="field-label">NEXT QUARTER</td><td>${ep(state.aar.next)}</td></tr>`:''}${state.aar.score!==null?`<tr><td class="field-label">SCORE</td><td>${state.aar.score}/10</td></tr>`:''}</table></div>`:'';const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Battle Plan - ${qLabel} ${qYear}</title><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet"><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Barlow',sans-serif;color:#1a1a18;background:white;font-size:13px;line-height:1.5}.page{max-width:760px;margin:0 auto;padding:40px 36px}.doc-header{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:3px solid #1a1a18;padding-bottom:16px;margin-bottom:28px}.doc-title{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:4px;line-height:1}.doc-meta{text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:13px;color:#666;letter-spacing:1px;line-height:1.7}.doc-quarter{font-family:'Bebas Neue',sans-serif;font-size:24px;color:#d4621a;letter-spacing:2px}.section{margin-bottom:28px}.section-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#888;border-bottom:1px solid #ddd;padding-bottom:5px;margin-bottom:12px}.vision-section{background:#f9f7f3;border-left:4px solid #d4621a;padding:16px 18px;border-radius:0 4px 4px 0}.vision-text{font-size:14px;line-height:1.8;margin-bottom:8px;font-style:italic}.vision-short{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:#d4621a}.q-block{padding:16px 18px;margin-bottom:16px;background:#fafafa;border-radius:0 4px 4px 0;page-break-inside:avoid}.q-block-header{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;margin-bottom:2px}.q-block-sub{font-family:'Barlow Condensed',sans-serif;font-size:12px;color:#888;letter-spacing:1px;margin-bottom:12px}.q-table{width:100%;border-collapse:collapse}.q-table tr{border-bottom:1px solid #eee}.q-table tr:last-child{border-bottom:none}.q-table td{padding:7px 6px;vertical-align:top}.field-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#888;white-space:nowrap;width:160px;padding-right:12px}.task-list{padding-left:18px}.task-list li{margin-bottom:5px}.doc-footer{margin-top:40px;padding-top:12px;border-top:1px solid #ddd;font-family:'Barlow Condensed',sans-serif;font-size:11px;color:#aaa;letter-spacing:1px;display:flex;justify-content:space-between}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}.page{padding:20px}}</style></head><body><div class="page"><div class="doc-header"><div><div class="doc-title">BATTLE PLANNER</div><div class="doc-quarter">${qLabel} - ${qYear}</div></div><div class="doc-meta">Generated: ${today}<br>Start: ${startFmt}<br>End: ${endFmt}</div></div>${visionHtml}<div class="section"><div class="section-label">QUADRANTS</div>${quadrantsHtml}</div>${nonNegHtml}${aarHtml}<div class="doc-footer"><span>BATTLE PLANNER - ORDER OF MAN</span><span>${qLabel} ${qYear}</span></div></div><script>window.onload=function(){window.print();}<\/script></body></html>`;const blob=new Blob([html],{type:'text/html'});const url=URL.createObjectURL(blob);const win=window.open(url,'_blank');if(!win)alert('Allow pop-ups to download your Battle Plan PDF.');}
+function saveDailyAAR(){const dk=dayKey(cdo);const d=getDailyData(dk);d.aar=document.getElementById(‘daily-aar-text’).value;save();}
+function shareBattlePlan(){const appUrl=‘https://shredgnar26.github.io/battle-planner/’;const vision=state.vision.short||state.vision.long?.slice(0,120)||’’;const text=`My Battle Plan - Q${state.quarter}\n\n`+(vision?`VISION: "${vision}"\n\n`:’’)+QUADRANTS.map(q=>{const qSt=state.quadrants[q.key];const obj=qSt.objective.text;const tactic=qSt.primaryTactic.text;return obj?`${q.name}: ${obj}${tactic?' - '+tactic:''}`:null;}).filter(Boolean).join(’\n’)+`\n\nTrack yours: ${appUrl}`;if(navigator.share)navigator.share({title:‘My Battle Plan’,text,url:appUrl}).catch(()=>{});else navigator.clipboard.writeText(text).then(()=>{const t=document.getElementById(‘save-toast’);t.textContent=‘COPIED’;t.classList.add(‘show’);clearTimeout(toastT);toastT=setTimeout(()=>{t.classList.remove(‘show’);t.textContent=‘SAVED’;},2000);});}
+function closeVisionModal(){document.getElementById(‘vision-modal’).classList.remove(‘open’);}
+function saveVision(){state.vision.long=document.getElementById(‘vision-long’).value;state.vision.short=document.getElementById(‘vision-short’).value;const prev=document.getElementById(‘vision-preview’);const text=state.vision.short||state.vision.long;if(text){prev.textContent=text;prev.className=‘vprev’;}else{prev.textContent=‘Your vision will appear here…’;prev.className=‘vprev empty’;}save();updateBR();}
+function renderVisionTab(){document.getElementById(‘vision-long’).value=state.vision.long;document.getElementById(‘vision-short’).value=state.vision.short;saveVision();}
+function saveAAR(){state.aar.win=document.getElementById(‘aar-win’).value;state.aar.loss=document.getElementById(‘aar-loss’).value;state.aar.adj=document.getElementById(‘aar-adj’).value;state.aar.next=document.getElementById(‘aar-next’).value;save();}
+function renderAARTab(){document.getElementById(‘aar-win’).value=state.aar.win;document.getElementById(‘aar-loss’).value=state.aar.loss;document.getElementById(‘aar-adj’).value=state.aar.adj;document.getElementById(‘aar-next’).value=state.aar.next;document.getElementById(‘aar-score-display’).textContent=state.aar.score!==null?state.aar.score:’–’;}
+function adjustScore(delta){let s=state.aar.score===null?5:state.aar.score;s=Math.max(1,Math.min(10,s+delta));state.aar.score=s;document.getElementById(‘aar-score-display’).textContent=s;save();}
+function startNextQuarter(){if(!confirm(‘End Q’+state.quarter+’ and start Q’+(state.quarter+1)+’? Objectives and tactics reset. Vision and AAR preserved.’))return;state.quarter++;QUADRANTS.forEach(q=>{state.quadrants[q.key]={};FIELDS.forEach(f=>{state.quadrants[q.key][f]={text:’’,finalized:false};});});state.aar={win:’’,loss:’’,adj:’’,next:’’,score:null};state.startDate=null;state.quarterEnd=null;state.modalDismissed=false;save();renderQ();updateBR();switchTab(‘quadrants’);}
+function esc(s){return(s||’’).replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’).replace(/”/g,’"’);}
+function downloadBattlePlan(){const Q_COLORS={calibration:’#7a7245’,connection:’#7a4a22’,condition:’#2a4f6e’,contribution:’#4a5a2a’};const today=new Date().toLocaleDateString(‘en-US’,{weekday:‘long’,month:‘long’,day:‘numeric’,year:‘numeric’});const qLabel=state.startDate?getQL(dateFromKey(state.startDate)):‘Q’+state.quarter;const qYear=state.startDate?dateFromKey(state.startDate).getFullYear():new Date().getFullYear();const startFmt=state.startDate?dateFromKey(state.startDate).toLocaleDateString(‘en-US’,{month:‘long’,day:‘numeric’,year:‘numeric’}):’–’;const endFmt=state.quarterEnd?dateFromKey(state.quarterEnd).toLocaleDateString(‘en-US’,{month:‘long’,day:‘numeric’,year:‘numeric’}):’–’;const ep=s=>(s||’’).replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’);const visionHtml=`<div class="section vision-section"><div class="section-label">COMPELLING VISION</div><div class="vision-text">${ep(state.vision.long)||'<em>Not set</em>'}</div>${state.vision.short?`<div class="vision-short">”${ep(state.vision.short)}”</div>`:''}</div>`;const quadrantsHtml=QUADRANTS.map(q=>{const qSt=state.quadrants[q.key];const bg=Q_COLORS[q.key];return`<div class="q-block" style="border-left:6px solid ${bg}"><div class="q-block-header" style="color:${bg}">${q.icon} ${q.name}</div><div class="q-block-sub">${q.subtitle}</div><table class="q-table"><tr><td class="field-label">12-WEEK OBJECTIVE</td><td>${ep(qSt.objective.text)||'<em>Not set</em>'}</td></tr><tr><td class="field-label">PRIMARY TACTIC</td><td>${ep(qSt.primaryTactic.text)||'<em>Not set</em>'}</td></tr><tr><td class="field-label">SECONDARY TACTIC</td><td>${ep(qSt.secondaryTactic.text)||'<em>Not set</em>'}</td></tr><tr><td class="field-label">30-DAY CHECKPOINT</td><td>${ep(qSt.cp30.text)||'<em>Not set</em>'}</td></tr><tr><td class="field-label">60-DAY CHECKPOINT</td><td>${ep(qSt.cp60.text)||'<em>Not set</em>'}</td></tr></table></div>`;}).join(’’);const nonNegHtml=(state.nonNeg||[]).length>0?`<div class="section"><div class="section-label">DAILY NON-NEGOTIABLES</div><ul class="task-list">${state.nonNeg.map(t=>`<li>${ep(t)}</li>`).join('')}</ul></div>`:’’;const aarHtml=(state.aar.win||state.aar.loss||state.aar.adj||state.aar.next)?`<div class="section"><div class="section-label">AFTER ACTION REVIEW</div><table class="q-table">${state.aar.win?`<tr><td class="field-label">WHAT WENT WELL</td><td>${ep(state.aar.win)}</td></tr>`:''}${state.aar.loss?`<tr><td class="field-label">WHAT DIDN’T</td><td>${ep(state.aar.loss)}</td></tr>`:''}${state.aar.adj?`<tr><td class="field-label">ADJUSTMENTS</td><td>${ep(state.aar.adj)}</td></tr>`:''}${state.aar.next?`<tr><td class="field-label">NEXT QUARTER</td><td>${ep(state.aar.next)}</td></tr>`:''}${state.aar.score!==null?`<tr><td class="field-label">SCORE</td><td>${state.aar.score}/10</td></tr>`:''}</table></div>`:’’;const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Battle Plan - ${qLabel} ${qYear}</title><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet"><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Barlow',sans-serif;color:#1a1a18;background:white;font-size:13px;line-height:1.5}.page{max-width:760px;margin:0 auto;padding:40px 36px}.doc-header{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:3px solid #1a1a18;padding-bottom:16px;margin-bottom:28px}.doc-title{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:4px;line-height:1}.doc-meta{text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:13px;color:#666;letter-spacing:1px;line-height:1.7}.doc-quarter{font-family:'Bebas Neue',sans-serif;font-size:24px;color:#d4621a;letter-spacing:2px}.section{margin-bottom:28px}.section-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#888;border-bottom:1px solid #ddd;padding-bottom:5px;margin-bottom:12px}.vision-section{background:#f9f7f3;border-left:4px solid #d4621a;padding:16px 18px;border-radius:0 4px 4px 0}.vision-text{font-size:14px;line-height:1.8;margin-bottom:8px;font-style:italic}.vision-short{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:#d4621a}.q-block{padding:16px 18px;margin-bottom:16px;background:#fafafa;border-radius:0 4px 4px 0;page-break-inside:avoid}.q-block-header{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;margin-bottom:2px}.q-block-sub{font-family:'Barlow Condensed',sans-serif;font-size:12px;color:#888;letter-spacing:1px;margin-bottom:12px}.q-table{width:100%;border-collapse:collapse}.q-table tr{border-bottom:1px solid #eee}.q-table tr:last-child{border-bottom:none}.q-table td{padding:7px 6px;vertical-align:top}.field-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#888;white-space:nowrap;width:160px;padding-right:12px}.task-list{padding-left:18px}.task-list li{margin-bottom:5px}.doc-footer{margin-top:40px;padding-top:12px;border-top:1px solid #ddd;font-family:'Barlow Condensed',sans-serif;font-size:11px;color:#aaa;letter-spacing:1px;display:flex;justify-content:space-between}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}.page{padding:20px}}</style></head><body><div class="page"><div class="doc-header"><div><div class="doc-title">BATTLE PLANNER</div><div class="doc-quarter">${qLabel} - ${qYear}</div></div><div class="doc-meta">Generated: ${today}<br>Start: ${startFmt}<br>End: ${endFmt}</div></div>${visionHtml}<div class="section"><div class="section-label">QUADRANTS</div>${quadrantsHtml}</div>${nonNegHtml}${aarHtml}<div class="doc-footer"><span>BATTLE PLANNER - ORDER OF MAN</span><span>${qLabel} ${qYear}</span></div></div><script>window.onload=function(){window.print();}<\/script></body></html>`;const blob=new Blob([html],{type:‘text/html’});const url=URL.createObjectURL(blob);const win=window.open(url,’_blank’);if(!win)alert(‘Allow pop-ups to download your Battle Plan PDF.’);}
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-const SUPABASE_URL='https://wjyhehuucmokdkpwiudf.supabase.co';
-const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndqeWhlaHV1Y21va2RrcHdpdWRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5NjE1MzMsImV4cCI6MjA5MDUzNzUzM30.g5ZF_qad1gM3eSZI8ohbZJBOAN7UIdtBtrwJ127Afpo';
-const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-
+const sb=supabase.createClient('https://wjyhehuucmokdkpwiudf.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndqeWhlaHV1Y21va2RrcHdpdWRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5NjE1MzMsImV4cCI6MjA5MDUzNzUzM30.g5ZF_qad1gM3eSZI8ohbZJBOAN7UIdtBtrwJ127Afpo');
 let cloudDataLoaded=false;
+let booted=false;
+let authMode='signin';
 
 async function saveToCloud(){
-  if(!cloudDataLoaded)return;
-  try{
-    const{data:{user}}=await sb.auth.getUser();
-    if(!user)return;
-    await sb.from('plans').upsert({user_id:user.id,data:state,updated_at:new Date().toISOString()},{onConflict:'user_id'});
-  }catch(e){console.log('cloud save error',e);}
+if(!cloudDataLoaded)return;
+try{
+const{data:{user}}=await sb.auth.getUser();
+if(!user)return;
+await sb.from(‘plans’).upsert({user_id:user.id,data:state,updated_at:new Date().toISOString()},{onConflict:‘user_id’});
+}catch(e){console.log(‘cloud save error’,e);}
 }
 
 async function loadFromCloud(user){
-  try{
-    const{data,error}=await sb.from('plans').select('data').eq('user_id',user.id).single();
-    if(error||!data?.data)return false;
-    const p=data.data;
-    state.quarter=p.quarter||1;
-    if(p.vision)state.vision=p.vision;
-    if(p.aar)state.aar=p.aar;
-    if(p.daily)state.daily=p.daily;
-    if(p.startDate)state.startDate=p.startDate;
-    if(p.quarterEnd)state.quarterEnd=p.quarterEnd;
-    if(p.modalDismissed)state.modalDismissed=p.modalDismissed;
-    if(p.nonNeg)state.nonNeg=p.nonNeg;
-    if(p.profile)state.profile={...state.profile,...p.profile};
-    if(p.quadrants)QUADRANTS.forEach(q=>{if(p.quadrants[q.key])FIELDS.forEach(f=>{if(p.quadrants[q.key][f])state.quadrants[q.key][f]=p.quadrants[q.key][f];});});
-    return true;
-  }catch(e){console.log('cloud load error',e);return false;}
+try{
+const{data,error}=await sb.from(‘plans’).select(‘data’).eq(‘user_id’,user.id).single();
+if(error||!data||!data.data)return false;
+const p=data.data;
+state.quarter=p.quarter||1;
+if(p.vision)state.vision=p.vision;
+if(p.aar)state.aar=p.aar;
+if(p.daily)state.daily=p.daily;
+if(p.startDate)state.startDate=p.startDate;
+if(p.quarterEnd)state.quarterEnd=p.quarterEnd;
+if(p.modalDismissed)state.modalDismissed=p.modalDismissed;
+if(p.nonNeg)state.nonNeg=p.nonNeg;
+if(p.profile)state.profile=Object.assign({},state.profile,p.profile);
+if(p.quadrants)QUADRANTS.forEach(function(q){if(p.quadrants[q.key])FIELDS.forEach(function(f){if(p.quadrants[q.key][f])state.quadrants[q.key][f]=p.quadrants[q.key][f];});});
+return true;
+}catch(e){console.log(‘cloud load error’,e);return false;}
 }
 
-async function initAuth(){
-  const{data:{session}}=await sb.auth.getSession();
-  if(session?.user){
-    document.getElementById('auth-screen').style.display='none';
-    load();
-    await loadFromCloud(session.user);
-    cloudDataLoaded=true;
-    window._cloudSave=saveToCloud;
-    renderQ();
-    updateBR();
-    updateProfileUI(session.user.email);
-  }else{
-    document.getElementById('auth-screen').style.display='flex';
-  }
+async function bootApp(user){
+if(booted)return;
+booted=true;
+document.getElementById(‘auth-screen’).style.display=‘none’;
+load();
+await loadFromCloud(user);
+cloudDataLoaded=true;
+window._cloudSave=saveToCloud;
+renderQ();
+updateBR();
+updateProfileUI(user.email);
 }
 
-sb.auth.onAuthStateChange(async(event,session)=>{
-  if(event==='SIGNED_IN'&&session?.user){
-    document.getElementById('auth-screen').style.display='none';
-    load();
-    await loadFromCloud(session.user);
-    cloudDataLoaded=true;
-    window._cloudSave=saveToCloud;
-    renderQ();
-    updateBR();
-    updateProfileUI(session.user.email);
-  }else if(event==='SIGNED_OUT'){
-    cloudDataLoaded=false;
-    window._cloudSave=null;
-    document.getElementById('auth-screen').style.display='flex';
-  }
+function showAuthScreen(){
+booted=false;
+cloudDataLoaded=false;
+window._cloudSave=null;
+authMode=‘signin’;
+var as=document.getElementById(‘auth-screen’);
+as.style.display=‘flex’;
+document.getElementById(‘auth-email’).value=’’;
+document.getElementById(‘auth-password’).value=’’;
+document.getElementById(‘auth-confirm’).value=’’;
+document.getElementById(‘auth-confirm’).style.display=‘none’;
+document.getElementById(‘signin-btn’).textContent=‘SIGN IN / SIGN UP’;
+document.getElementById(‘auth-msg’).textContent=’’;
+}
+
+sb.auth.onAuthStateChange(function(event,session){
+if((event===‘INITIAL_SESSION’||event===‘SIGNED_IN’)&&session&&session.user){
+bootApp(session.user);
+}else if(event===‘SIGNED_OUT’){
+showAuthScreen();
+}
 });
 
 window.signOut=async function(){
-  cloudDataLoaded=false;
-  window._cloudSave=null;
-  try{await sb.auth.signOut();}catch(e){}
-  localStorage.removeItem('bp_v3');
-  location.reload();
+try{await sb.auth.signOut();}catch(e){}
+localStorage.removeItem(‘bp_v3’);
 };
 
-let authMode='signin';
 window.setSignupMode=function(){
-  authMode='signup';
-  document.getElementById('auth-confirm').style.display='block';
-  document.getElementById('signin-btn').textContent='CREATE ACCOUNT';
-  const m=document.getElementById('auth-msg');
-  m.style.color='#a09880';
-  m.textContent='New account - enter a password and confirm it.';
+authMode=‘signup’;
+document.getElementById(‘auth-confirm’).style.display=‘block’;
+document.getElementById(‘signin-btn’).textContent=‘CREATE ACCOUNT’;
+var m=document.getElementById(‘auth-msg’);
+m.style.color=’#a09880’;
+m.textContent=‘New account - enter a password and confirm it.’;
 };
 
-document.getElementById('signin-btn').addEventListener('click',async()=>{
-  const email=document.getElementById('auth-email').value.trim();
-  const password=document.getElementById('auth-password').value.trim();
-  const confirm=document.getElementById('auth-confirm').value.trim();
-  const msgEl=document.getElementById('auth-msg');
-  if(!email||!password){msgEl.textContent='Enter email and password.';return;}
-  if(authMode==='signup'){
-    if(password!==confirm){msgEl.style.color='#d4621a';msgEl.textContent='Passwords do not match.';return;}
-    msgEl.style.color='#a09880';msgEl.textContent='Creating account...';
-    const{error}=await sb.auth.signUp({email,password});
-    if(error){msgEl.style.color='#d4621a';msgEl.textContent='Error: '+error.message;}
-    else{msgEl.style.color='#7aea7a';msgEl.textContent='Account created! Check your email to confirm before signing in.';document.getElementById('signin-btn').textContent='SIGN IN / SIGN UP';document.getElementById('auth-confirm').style.display='none';document.getElementById('auth-password').value='';document.getElementById('auth-confirm').value='';authMode='signin';}
-    return;
-  }
-  msgEl.style.color='#a09880';msgEl.textContent='Signing in...';
-  const{error}=await sb.auth.signInWithPassword({email,password});
-  if(error){
-    if(error.message.toLowerCase().includes('invalid login credentials')||error.message.toLowerCase().includes('invalid credentials'))window.setSignupMode();
-    else if(error.message.toLowerCase().includes('email not confirmed')){msgEl.style.color='#d4621a';msgEl.textContent='Please confirm your email first. Check your inbox.';}
-    else{msgEl.style.color='#d4621a';msgEl.textContent='Error: '+error.message;}
-  }else{msgEl.style.color='#7aea7a';msgEl.textContent='Signed in!';}
+document.getElementById(‘signin-btn’).addEventListener(‘click’,async function(){
+var email=document.getElementById(‘auth-email’).value.trim();
+var password=document.getElementById(‘auth-password’).value.trim();
+var confirm=document.getElementById(‘auth-confirm’).value.trim();
+var msgEl=document.getElementById(‘auth-msg’);
+if(!email||!password){msgEl.textContent=‘Enter email and password.’;return;}
+if(authMode===‘signup’){
+if(password!==confirm){msgEl.style.color=’#d4621a’;msgEl.textContent=‘Passwords do not match.’;return;}
+msgEl.style.color=’#a09880’;msgEl.textContent=‘Creating account…’;
+var su=await sb.auth.signUp({email:email,password:password});
+if(su.error){msgEl.style.color=’#d4621a’;msgEl.textContent=‘Error: ‘+su.error.message;}
+else{msgEl.style.color=’#7aea7a’;msgEl.textContent=‘Account created! Check your email to confirm before signing in.’;document.getElementById(‘signin-btn’).textContent=‘SIGN IN / SIGN UP’;document.getElementById(‘auth-confirm’).style.display=‘none’;document.getElementById(‘auth-password’).value=’’;document.getElementById(‘auth-confirm’).value=’’;authMode=‘signin’;}
+return;
+}
+msgEl.style.color=’#a09880’;msgEl.textContent=‘Signing in…’;
+var si=await sb.auth.signInWithPassword({email:email,password:password});
+if(si.error){
+var msg=si.error.message.toLowerCase();
+if(msg.includes(‘invalid login credentials’)||msg.includes(‘invalid credentials’))window.setSignupMode();
+else if(msg.includes(‘email not confirmed’)){msgEl.style.color=’#d4621a’;msgEl.textContent=‘Please confirm your email first. Check your inbox.’;}
+else{msgEl.style.color=’#d4621a’;msgEl.textContent=‘Error: ‘+si.error.message;}
+}else{msgEl.style.color=’#7aea7a’;msgEl.textContent=‘Signed in!’;}
 });
-
-initAuth();
 </script>
+
 </body>
 </html>
