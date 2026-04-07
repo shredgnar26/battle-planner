@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+f<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -394,6 +394,7 @@ main{padding-bottom:40px}
       </div>
     </div>
     <button class="eibtn" onclick="openEditInfo()">EDIT INFO</button>
+<button class="eibtn" onclick="manualSync()" id="sync-btn">SYNC TO CLOUD</button>
     <div class="acct-stitle">SUBSCRIPTION</div>
     <div class="sub-card">
       <div class="sub-slbl">Member</div>
@@ -502,7 +503,19 @@ function openEditInfo(){const p=state.profile;document.getElementById('edit-name
 function closeEditInfo(){document.getElementById('edit-screen').classList.remove('open');}
 function handlePicChange(event){const file=event.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{state.profile.photoDataUrl=e.target.result;document.getElementById('edit-pic').innerHTML=`<img src="${e.target.result}" alt=""/>`;};reader.readAsDataURL(file);}
 function saveProfileChanges(){state.profile.name=document.getElementById('edit-name').value.trim();state.profile.phone=document.getElementById('edit-phone').value.trim();state.profile.gender=document.getElementById('edit-gender').value;state.profile.age=document.getElementById('edit-age').value.trim();state.profile.zip=document.getElementById('edit-zip').value.trim();save();updateProfileUI(_email);closeEditInfo();const t=document.getElementById('save-toast');t.textContent='PROFILE SAVED';t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>{t.classList.remove('show');t.textContent='SAVED';},2000);}
-function switchTab(id){document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(el=>el.classList.remove('active'));document.getElementById('tab-'+id).classList.add('active');const map={quadrants:'QUADRANTS',daily:'DAILY',vision:'VISION',aar:'AAR'};document.querySelectorAll('.tab-btn').forEach(b=>{if(b.textContent===map[id])b.classList.add('active');});if(id==='daily')renderDaily();if(id==='vision')renderVisionTab();if(id==='aar')renderAARTab();}
+async function manualSync(){
+  const btn=document.getElementById('sync-btn');
+  if(btn)btn.textContent='SYNCING...';
+  try{
+    const{data:{user}}=await sb.auth.getUser();
+    if(!user){alert('Not signed in.');return;}
+    const{error}=await sb.from('plans').upsert({user_id:user.id,data:state,updated_at:new Date().toISOString()},{onConflict:'user_id'});
+    if(error){alert('Sync failed: '+error.message);}
+    else{const t=document.getElementById('save-toast');t.textContent='SYNCED ✓';t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>{t.classList.remove('show');t.textContent='SAVED';},2500);}
+  }catch(e){alert('Sync error: '+e.message);}
+  if(btn)btn.textContent='SYNC TO CLOUD';
+}
+  function switchTab(id){document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(el=>el.classList.remove('active'));document.getElementById('tab-'+id).classList.add('active');const map={quadrants:'QUADRANTS',daily:'DAILY',vision:'VISION',aar:'AAR'};document.querySelectorAll('.tab-btn').forEach(b=>{if(b.textContent===map[id])b.classList.add('active');});if(id==='daily')renderDaily();if(id==='vision')renderVisionTab();if(id==='aar')renderAARTab();}
 function calcBR(){let total=1,done=0;if(state.vision.short||state.vision.long)done++;QUADRANTS.forEach(q=>{FIELDS.forEach(f=>{total++;if(state.quadrants[q.key][f].finalized)done++;});});return Math.round((done/total)*100);}
 function updateBR(){const pct=calcBR();document.getElementById('ready-label').textContent=pct+'% Battle-Ready';document.getElementById('ready-fill').style.width=pct+'%';if(pct===100&&!state.startDate&&!state.modalDismissed)setTimeout(()=>document.getElementById('battle-ready-modal').classList.add('show'),600);}
 function dismissModal(){document.getElementById('battle-ready-modal').classList.remove('show');state.modalDismissed=true;save();}
