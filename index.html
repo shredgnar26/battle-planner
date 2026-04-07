@@ -566,31 +566,117 @@ function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace
 function downloadBattlePlan(){const Q_COLORS={calibration:'#7a7245',connection:'#7a4a22',condition:'#2a4f6e',contribution:'#4a5a2a'};const today=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});const qLabel=state.startDate?getQL(dateFromKey(state.startDate)):'Q'+state.quarter;const qYear=state.startDate?dateFromKey(state.startDate).getFullYear():new Date().getFullYear();const startFmt=state.startDate?dateFromKey(state.startDate).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'--';const endFmt=state.quarterEnd?dateFromKey(state.quarterEnd).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'--';const ep=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');const visionHtml=`<div class="section vision-section"><div class="section-label">COMPELLING VISION</div><div class="vision-text">${ep(state.vision.long)||'<em>Not set</em>'}</div>${state.vision.short?`<div class="vision-short">"${ep(state.vision.short)}"</div>`:''}</div>`;const quadrantsHtml=QUADRANTS.map(q=>{const qSt=state.quadrants[q.key];const bg=Q_COLORS[q.key];return`<div class="q-block" style="border-left:6px solid ${bg}"><div class="q-block-header" style="color:${bg}">${q.icon} ${q.name}</div><div class="q-block-sub">${q.subtitle}</div><table class="q-table"><tr><td class="field-label">12-WEEK OBJECTIVE</td><td>${ep(qSt.objective.text)||'<em>Not set</em>'}</td></tr><tr><td class="field-label">PRIMARY TACTIC</td><td>${ep(qSt.primaryTactic.text)||'<em>Not set</em>'}</td></tr><tr><td class="field-label">SECONDARY TACTIC</td><td>${ep(qSt.secondaryTactic.text)||'<em>Not set</em>'}</td></tr><tr><td class="field-label">30-DAY CHECKPOINT</td><td>${ep(qSt.cp30.text)||'<em>Not set</em>'}</td></tr><tr><td class="field-label">60-DAY CHECKPOINT</td><td>${ep(qSt.cp60.text)||'<em>Not set</em>'}</td></tr></table></div>`;}).join('');const nonNegHtml=(state.nonNeg||[]).length>0?`<div class="section"><div class="section-label">DAILY NON-NEGOTIABLES</div><ul class="task-list">${state.nonNeg.map(t=>`<li>${ep(t)}</li>`).join('')}</ul></div>`:'';const aarHtml=(state.aar.win||state.aar.loss||state.aar.adj||state.aar.next)?`<div class="section"><div class="section-label">AFTER ACTION REVIEW</div><table class="q-table">${state.aar.win?`<tr><td class="field-label">WHAT WENT WELL</td><td>${ep(state.aar.win)}</td></tr>`:''}${state.aar.loss?`<tr><td class="field-label">WHAT DIDN'T</td><td>${ep(state.aar.loss)}</td></tr>`:''}${state.aar.adj?`<tr><td class="field-label">ADJUSTMENTS</td><td>${ep(state.aar.adj)}</td></tr>`:''}${state.aar.next?`<tr><td class="field-label">NEXT QUARTER</td><td>${ep(state.aar.next)}</td></tr>`:''}${state.aar.score!==null?`<tr><td class="field-label">SCORE</td><td>${state.aar.score}/10</td></tr>`:''}</table></div>`:'';const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Battle Plan - ${qLabel} ${qYear}</title><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet"><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Barlow',sans-serif;color:#1a1a18;background:white;font-size:13px;line-height:1.5}.page{max-width:760px;margin:0 auto;padding:40px 36px}.doc-header{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:3px solid #1a1a18;padding-bottom:16px;margin-bottom:28px}.doc-title{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:4px;line-height:1}.doc-meta{text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:13px;color:#666;letter-spacing:1px;line-height:1.7}.doc-quarter{font-family:'Bebas Neue',sans-serif;font-size:24px;color:#d4621a;letter-spacing:2px}.section{margin-bottom:28px}.section-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#888;border-bottom:1px solid #ddd;padding-bottom:5px;margin-bottom:12px}.vision-section{background:#f9f7f3;border-left:4px solid #d4621a;padding:16px 18px;border-radius:0 4px 4px 0}.vision-text{font-size:14px;line-height:1.8;margin-bottom:8px;font-style:italic}.vision-short{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:#d4621a}.q-block{padding:16px 18px;margin-bottom:16px;background:#fafafa;border-radius:0 4px 4px 0;page-break-inside:avoid}.q-block-header{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;margin-bottom:2px}.q-block-sub{font-family:'Barlow Condensed',sans-serif;font-size:12px;color:#888;letter-spacing:1px;margin-bottom:12px}.q-table{width:100%;border-collapse:collapse}.q-table tr{border-bottom:1px solid #eee}.q-table tr:last-child{border-bottom:none}.q-table td{padding:7px 6px;vertical-align:top}.field-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#888;white-space:nowrap;width:160px;padding-right:12px}.task-list{padding-left:18px}.task-list li{margin-bottom:5px}.doc-footer{margin-top:40px;padding-top:12px;border-top:1px solid #ddd;font-family:'Barlow Condensed',sans-serif;font-size:11px;color:#aaa;letter-spacing:1px;display:flex;justify-content:space-between}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}.page{padding:20px}}</style></head><body><div class="page"><div class="doc-header"><div><div class="doc-title">BATTLE PLANNER</div><div class="doc-quarter">${qLabel} - ${qYear}</div></div><div class="doc-meta">Generated: ${today}<br>Start: ${startFmt}<br>End: ${endFmt}</div></div>${visionHtml}<div class="section"><div class="section-label">QUADRANTS</div>${quadrantsHtml}</div>${nonNegHtml}${aarHtml}<div class="doc-footer"><span>BATTLE PLANNER - ORDER OF MAN</span><span>${qLabel} ${qYear}</span></div></div><script>window.onload=function(){window.print();}<\/script></body></html>`;const blob=new Blob([html],{type:'text/html'});const url=URL.createObjectURL(blob);const win=window.open(url,'_blank');if(!win)alert('Allow pop-ups to download your Battle Plan PDF.');}
 
 </script>
-<script type="module">
-import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
-const sb=createClient('https://wjyhehuucmokdkpwiudf.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndqeWhlaHV1Y21va2RrcHdpdWRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5NjE1MzMsImV4cCI6MjA5MDUzNzUzM30.g5ZF_qad1gM3eSZI8ohbZJBOAN7UIdtBtrwJ127Afpo');
-window._sb=sb;
-window.signOut=async function(){try{await sb.auth.signOut();}catch(e){}localStorage.removeItem('bp_v3');location.reload();};
-let authMode='signin';
-window.setSignupMode=function(){authMode='signup';document.getElementById('auth-confirm').style.display='block';document.getElementById('signin-btn').textContent='CREATE ACCOUNT';const m=document.getElementById('auth-msg');m.style.color='#a09880';m.textContent='New account - enter a password and confirm it.';};
-document.getElementById('signin-btn').addEventListener('click',async()=>{const email=document.getElementById('auth-email').value.trim();const password=document.getElementById('auth-password').value.trim();const confirm=document.getElementById('auth-confirm').value.trim();const msgEl=document.getElementById('auth-msg');if(!email||!password){msgEl.textContent='Enter email and password.';return;}if(authMode==='signup'){if(password!==confirm){msgEl.style.color='#d4621a';msgEl.textContent='Passwords do not match.';return;}msgEl.style.color='#a09880';msgEl.textContent='Creating account...';const{error}=await sb.auth.signUp({email,password});if(error){msgEl.style.color='#d4621a';msgEl.textContent='Error: '+error.message;}else{msgEl.style.color='#7aea7a';msgEl.textContent='Account created! Check your email to confirm before signing in.';document.getElementById('signin-btn').textContent='SIGN IN / SIGN UP';document.getElementById('auth-confirm').style.display='none';document.getElementById('auth-password').value='';document.getElementById('auth-confirm').value='';authMode='signin';}return;}msgEl.style.color='#a09880';msgEl.textContent='Signing in...';const{error}=await sb.auth.signInWithPassword({email,password});if(error){if(error.message.toLowerCase().includes('invalid login credentials')||error.message.toLowerCase().includes('invalid credentials'))window.setSignupMode();else if(error.message.toLowerCase().includes('email not confirmed')){msgEl.style.color='#d4621a';msgEl.textContent='Please confirm your email first. Check your inbox.';}else{msgEl.style.color='#d4621a';msgEl.textContent='Error: '+error.message;}}else{msgEl.style.color='#7aea7a';msgEl.textContent='Signed in!';}});
-async function saveToCloud(){const{data:{user}}=await sb.auth.getUser();if(!user)return;await sb.from('plans').upsert({user_id:user.id,data:state,updated_at:new Date().toISOString()},{onConflict:'user_id'});}
-async function loadFromCloud(){const{data:{user}}=await sb.auth.getUser();if(!user)return false;const{data}=await sb.from('plans').select('data').eq('user_id',user.id).single();if(data?.data){const p=data.data;state.quarter=p.quarter||1;if(p.vision)state.vision=p.vision;if(p.aar)state.aar=p.aar;if(p.daily)state.daily=p.daily;if(p.startDate)state.startDate=p.startDate;if(p.quarterEnd)state.quarterEnd=p.quarterEnd;if(p.modalDismissed)state.modalDismissed=p.modalDismissed;if(p.nonNeg)state.nonNeg=p.nonNeg;if(p.profile)state.profile={...state.profile,...p.profile};if(p.quadrants)QUADRANTS.forEach(q=>{if(p.quadrants[q.key])FIELDS.forEach(f=>{if(p.quadrants[q.key][f])state.quadrants[q.key][f]=p.quadrants[q.key][f];});});return true;}return false;}
-window._cloudSave=saveToCloud;
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const SUPABASE_URL='https://wjyhehuucmokdkpwiudf.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndqeWhlaHV1Y21va2RrcHdpdWRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5NjE1MzMsImV4cCI6MjA5MDUzNzUzM30.g5ZF_qad1gM3eSZI8ohbZJBOAN7UIdtBtrwJ127Afpo';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-// FIXED: Single auth listener — no getSession() race condition
-sb.auth.onAuthStateChange(async(event,session)=>{
+let cloudDataLoaded=false;
+
+async function saveToCloud(){
+  if(!cloudDataLoaded)return;
+  try{
+    const{data:{user}}=await sb.auth.getUser();
+    if(!user)return;
+    await sb.from('plans').upsert({user_id:user.id,data:state,updated_at:new Date().toISOString()},{onConflict:'user_id'});
+  }catch(e){console.log('cloud save error',e);}
+}
+
+async function loadFromCloud(user){
+  try{
+    const{data,error}=await sb.from('plans').select('data').eq('user_id',user.id).single();
+    if(error||!data?.data)return false;
+    const p=data.data;
+    state.quarter=p.quarter||1;
+    if(p.vision)state.vision=p.vision;
+    if(p.aar)state.aar=p.aar;
+    if(p.daily)state.daily=p.daily;
+    if(p.startDate)state.startDate=p.startDate;
+    if(p.quarterEnd)state.quarterEnd=p.quarterEnd;
+    if(p.modalDismissed)state.modalDismissed=p.modalDismissed;
+    if(p.nonNeg)state.nonNeg=p.nonNeg;
+    if(p.profile)state.profile={...state.profile,...p.profile};
+    if(p.quadrants)QUADRANTS.forEach(q=>{if(p.quadrants[q.key])FIELDS.forEach(f=>{if(p.quadrants[q.key][f])state.quadrants[q.key][f]=p.quadrants[q.key][f];});});
+    return true;
+  }catch(e){console.log('cloud load error',e);return false;}
+}
+
+async function initAuth(){
+  const{data:{session}}=await sb.auth.getSession();
   if(session?.user){
     document.getElementById('auth-screen').style.display='none';
     load();
-    await loadFromCloud();
+    await loadFromCloud(session.user);
+    cloudDataLoaded=true;
+    window._cloudSave=saveToCloud;
     renderQ();
     updateBR();
     updateProfileUI(session.user.email);
   }else{
     document.getElementById('auth-screen').style.display='flex';
   }
+}
+
+sb.auth.onAuthStateChange(async(event,session)=>{
+  if(event==='SIGNED_IN'&&session?.user){
+    document.getElementById('auth-screen').style.display='none';
+    load();
+    await loadFromCloud(session.user);
+    cloudDataLoaded=true;
+    window._cloudSave=saveToCloud;
+    renderQ();
+    updateBR();
+    updateProfileUI(session.user.email);
+  }else if(event==='SIGNED_OUT'){
+    cloudDataLoaded=false;
+    window._cloudSave=null;
+    document.getElementById('auth-screen').style.display='flex';
+  }
 });
+
+window.signOut=async function(){
+  cloudDataLoaded=false;
+  window._cloudSave=null;
+  try{await sb.auth.signOut();}catch(e){}
+  localStorage.removeItem('bp_v3');
+  location.reload();
+};
+
+let authMode='signin';
+window.setSignupMode=function(){
+  authMode='signup';
+  document.getElementById('auth-confirm').style.display='block';
+  document.getElementById('signin-btn').textContent='CREATE ACCOUNT';
+  const m=document.getElementById('auth-msg');
+  m.style.color='#a09880';
+  m.textContent='New account - enter a password and confirm it.';
+};
+
+document.getElementById('signin-btn').addEventListener('click',async()=>{
+  const email=document.getElementById('auth-email').value.trim();
+  const password=document.getElementById('auth-password').value.trim();
+  const confirm=document.getElementById('auth-confirm').value.trim();
+  const msgEl=document.getElementById('auth-msg');
+  if(!email||!password){msgEl.textContent='Enter email and password.';return;}
+  if(authMode==='signup'){
+    if(password!==confirm){msgEl.style.color='#d4621a';msgEl.textContent='Passwords do not match.';return;}
+    msgEl.style.color='#a09880';msgEl.textContent='Creating account...';
+    const{error}=await sb.auth.signUp({email,password});
+    if(error){msgEl.style.color='#d4621a';msgEl.textContent='Error: '+error.message;}
+    else{msgEl.style.color='#7aea7a';msgEl.textContent='Account created! Check your email to confirm before signing in.';document.getElementById('signin-btn').textContent='SIGN IN / SIGN UP';document.getElementById('auth-confirm').style.display='none';document.getElementById('auth-password').value='';document.getElementById('auth-confirm').value='';authMode='signin';}
+    return;
+  }
+  msgEl.style.color='#a09880';msgEl.textContent='Signing in...';
+  const{error}=await sb.auth.signInWithPassword({email,password});
+  if(error){
+    if(error.message.toLowerCase().includes('invalid login credentials')||error.message.toLowerCase().includes('invalid credentials'))window.setSignupMode();
+    else if(error.message.toLowerCase().includes('email not confirmed')){msgEl.style.color='#d4621a';msgEl.textContent='Please confirm your email first. Check your inbox.';}
+    else{msgEl.style.color='#d4621a';msgEl.textContent='Error: '+error.message;}
+  }else{msgEl.style.color='#7aea7a';msgEl.textContent='Signed in!';}
+});
+
+initAuth();
 </script>
 </body>
 </html>
