@@ -848,12 +848,9 @@ window.createTeam=async function(){
   var nameEl=document.getElementById('new-team-name');if(!nameEl)return;
   var teamName=nameEl.value.trim().toUpperCase();
   if(!teamName){alert('Enter a team name.');return;}
-  var userRes=await sb.auth.getUser();var user=userRes.data.user;if(!user)return;
   var inviteCode=Math.random().toString(36).substr(2,6).toUpperCase();
-  var teamRes=await sb.from('teams').insert({name:teamName,created_by:user.id,invite_code:inviteCode}).select().single();
-  if(teamRes.error){alert('Error creating team: '+teamRes.error.message);return;}
-  var memRes=await sb.from('team_members').insert({team_id:teamRes.data.id,user_id:user.id,role:'admin'});
-  if(memRes.error){alert('Error: '+memRes.error.message);return;}
+  var res=await sb.rpc('create_team',{p_name:teamName,p_invite_code:inviteCode});
+  if(res.error){alert('Error creating team: '+res.error.message);return;}
   await loadTeamData();
 };
 
@@ -861,14 +858,12 @@ window.joinTeam=async function(){
   var codeEl=document.getElementById('join-code-input');if(!codeEl)return;
   var code=codeEl.value.trim().toUpperCase();
   if(!code){alert('Enter an invite code.');return;}
-  var userRes=await sb.auth.getUser();var user=userRes.data.user;if(!user)return;
-  var teamRes=await sb.from('teams').select('id,name').eq('invite_code',code).maybeSingle();
-  if(!teamRes.data){alert('Invalid invite code. Check the code and try again.');return;}
-  var memRes=await sb.from('team_members').insert({team_id:teamRes.data.id,user_id:user.id,role:'member'});
-  if(memRes.error){
-    var msg=memRes.error.message.toLowerCase();
-    if(msg.includes('unique')||msg.includes('duplicate'))alert('You are already on a team.');
-    else alert('Error joining team: '+memRes.error.message);
+  var res=await sb.rpc('join_team_by_code',{p_invite_code:code});
+  if(res.error){
+    var msg=res.error.message.toLowerCase();
+    if(msg.includes('invalid_code')||msg.includes('invalid'))alert('Invalid invite code. Check the code and try again.');
+    else if(msg.includes('unique')||msg.includes('duplicate'))alert('You are already on a team.');
+    else alert('Error joining team: '+res.error.message);
     return;
   }
   await loadTeamData();
