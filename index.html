@@ -808,14 +808,26 @@ function renderTeamView(currentUserId){
     var isMe=member.user_id===currentUserId;
     var isThisAdmin=member.role==='admin';
     var quadHtml=QUADRANTS.map(function(q){var wc=stats.weeklyCompletion[q.key]||0;var col=wc>=5?'var(--orange)':'var(--light)';return'<div style="flex:1;text-align:center"><div style="font-size:16px">'+q.icon+'</div><div style="font-family:var(--fd);font-size:18px;color:'+col+'">'+wc+'/7</div><div style="font-family:var(--fc);font-size:9px;color:var(--muted);letter-spacing:.5px">'+q.name.slice(0,4)+'</div></div>';}).join('');
-    var removeBtn=isAdmin&&!isMe?'<button class="sobtn" style="margin-top:14px" onclick="window.removeMember(\''+member.user_id+'\')">REMOVE MEMBER</button>':'';
-    var roleLabel=isThisAdmin?'TEAM LEADER':'MEMBER';
+    var roleTitles={'admin':'TEAM LEADER','battle team leader':'BATTLE TEAM LEADER','xo':'XO','fire team leader':'FIRE TEAM LEADER','member':'MEMBER'};
+    var displayRole=roleTitles[member.role]||'MEMBER';
     var youLabel=isMe?' (YOU)':'';
+    var adminControls='';
+    if(isAdmin&&!isMe){
+      if(!isThisAdmin){
+        var roleOpts=[{v:'battle team leader',l:'Battle Team Leader'},{v:'xo',l:'XO'},{v:'fire team leader',l:'Fire Team Leader'},{v:'member',l:'Member'}];
+        var dd='<select onchange="window.updateMemberRole(\''+member.user_id+'\',this.value)" style="background:#111110;border:1px solid #444;color:var(--light);font-family:var(--fc);font-size:12px;font-weight:700;letter-spacing:1px;padding:8px 10px;border-radius:4px;width:100%;margin-top:12px;cursor:pointer">';
+        roleOpts.forEach(function(o){dd+='<option value="'+o.v+'"'+(member.role===o.v?' selected':'')+'>'+o.l+'</option>';});
+        dd+='</select>';
+        adminControls+=dd;
+      }
+      adminControls+='<button class="eibtn" style="margin-top:8px;margin-bottom:0" onclick="window.transferLeadership(\''+member.user_id+'\')">TRANSFER LEADERSHIP</button>';
+      adminControls+='<button class="sobtn" style="margin-top:8px" onclick="window.removeMember(\''+member.user_id+'\')">REMOVE MEMBER</button>';
+    }
     html+='<div class="team-member-card"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">'
-    +'<div><div style="font-family:var(--fc);font-size:18px;font-weight:700;letter-spacing:1px">'+esc(stats.name)+youLabel+'</div><div style="font-family:var(--fc);font-size:12px;color:var(--muted);letter-spacing:1px;margin-top:2px">'+roleLabel+'</div></div>'
+    +'<div><div style="font-family:var(--fc);font-size:18px;font-weight:700;letter-spacing:1px">'+esc(stats.name)+youLabel+'</div><div style="font-family:var(--fc);font-size:12px;color:var(--muted);letter-spacing:1px;margin-top:2px">'+displayRole+'</div></div>'
     +'<div style="text-align:right"><div style="font-family:var(--fd);font-size:32px;color:var(--orange);line-height:1">'+stats.br+'%</div><div style="font-family:var(--fc);font-size:10px;color:var(--muted);letter-spacing:1px">BATTLE-READY</div></div></div>'
     +'<div class="br-bar" style="margin-bottom:14px"><div class="br-fill" style="width:'+stats.br+'%"></div></div>'
-    +'<div style="display:flex;gap:6px">'+quadHtml+'</div>'+removeBtn+'</div>';
+    +'<div style="display:flex;gap:6px">'+quadHtml+'</div>'+adminControls+'</div>';
   });
   body.innerHTML=html;
 }
@@ -872,6 +884,19 @@ window.joinTeam=async function(){
 window.removeMember=async function(userId){
   if(!confirm('Remove this member from the team?'))return;
   var res=await sb.from('team_members').delete().eq('user_id',userId);
+  if(res.error){alert('Error: '+res.error.message);return;}
+  await loadTeamData();
+};
+
+window.transferLeadership=async function(userId){
+  if(!confirm('Transfer leadership to this member? You will become a regular member.'))return;
+  var res=await sb.rpc('transfer_leadership',{p_new_admin_user_id:userId});
+  if(res.error){alert('Error: '+res.error.message);return;}
+  await loadTeamData();
+};
+
+window.updateMemberRole=async function(userId,role){
+  var res=await sb.rpc('update_member_role',{p_user_id:userId,p_role:role});
   if(res.error){alert('Error: '+res.error.message);return;}
   await loadTeamData();
 };
