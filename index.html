@@ -269,6 +269,11 @@ main{padding-bottom:40px}
 .np-btn-cancel{background:transparent;border:1px solid rgba(255,255,255,.25);color:var(--light)}
 .np-btn-confirm{background:var(--orange);color:white}
 .np-btn-confirm:disabled{opacity:.4;cursor:default}
+.team-screen{position:fixed;inset:0;background:#141412;z-index:650;display:flex;flex-direction:column;overflow-y:auto;transform:translateX(100%);transition:transform .28s ease}
+.team-screen.open{transform:translateX(0)}
+.team-member-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:18px;margin-bottom:12px}
+.invite-code-box{background:rgba(212,98,26,.08);border:2px solid rgba(212,98,26,.4);border-radius:10px;padding:20px;text-align:center;margin-bottom:16px}
+.team-btn{display:block;flex:1;background:transparent;border:1px solid rgba(255,255,255,.2);border-radius:6px;color:var(--light);font-family:var(--fc);font-size:13px;font-weight:700;letter-spacing:2px;padding:12px;cursor:pointer;text-align:center}
 </style>
 </head>
 <body>
@@ -390,7 +395,7 @@ main{padding-bottom:40px}
       <div class="mnav-ico"><svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8.5" y1="7" x2="15.5" y2="7"/><line x1="8.5" y1="11" x2="15.5" y2="11"/><line x1="8.5" y1="15" x2="13" y2="15"/><circle cx="6.5" cy="7" r="0.75" fill="white" stroke="none"/><circle cx="6.5" cy="11" r="0.75" fill="white" stroke="none"/><circle cx="6.5" cy="15" r="0.75" fill="white" stroke="none"/></svg></div>
       <div class="mnav-lbl">TRACKER</div>
     </div>
-    <div class="mnav-item disabled">
+    <div class="mnav-item" onclick="openTeam()">
       <div class="mnav-ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="17" cy="8" r="2.5"/><path d="M21 21v-1.5a3.5 3.5 0 0 0-2.5-3.35"/></svg></div>
       <div class="mnav-lbl">MY TEAM</div>
     </div>
@@ -462,6 +467,18 @@ main{padding-bottom:40px}
     <div class="efield"><div class="eflbl">Age (Optional)</div><input class="efinp" id="edit-age" type="number" placeholder="Age" min="13" max="120"/></div>
     <div class="efield"><div class="eflbl">Zip Code (Optional)</div><input class="efinp" id="edit-zip" type="text" placeholder="Zip code"/></div>
     <button class="savebtn" onclick="saveProfileChanges()">SAVE CHANGES</button>
+  </div>
+</div>
+
+<!-- TEAM SCREEN -->
+<div class="team-screen" id="team-screen">
+  <div class="acct-tbar">
+    <button class="acct-back" onclick="closeTeam()">&#8592;</button>
+    <div class="acct-ttl">MY FIRE TEAM</div>
+    <div style="width:40px"></div>
+  </div>
+  <div id="team-body" class="acct-body">
+    <div style="text-align:center;padding:40px 0;color:var(--muted);font-family:var(--fc);letter-spacing:1px">Loading...</div>
   </div>
 </div>
 
@@ -739,6 +756,9 @@ function confirmNewPlanAction(){
   }
 }
 
+function openTeam(){closeMenu();document.getElementById('team-screen').classList.add('open');if(window._loadTeamData)window._loadTeamData();}
+function closeTeam(){document.getElementById('team-screen').classList.remove('open');}
+function copyInviteCode(code){navigator.clipboard.writeText(code).then(function(){var t=document.getElementById('save-toast');t.textContent='CODE COPIED';t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('show');t.textContent='SAVED';},2000);});}
 function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function downloadBattlePlan(){const Q_COLORS={calibration:'#7a7245',connection:'#7a4a22',condition:'#2a4f6e',contribution:'#4a5a2a'};const today=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});const qLabel=state.quarterLabel||(state.startDate?getQL(dateFromKey(state.startDate)):'Q'+state.quarter);const qYear=state.startDate?dateFromKey(state.startDate).getFullYear():new Date().getFullYear();const startFmt=state.startDate?dateFromKey(state.startDate).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'--';const endFmt=state.quarterEnd?dateFromKey(state.quarterEnd).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'--';const ep=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');const visionHtml=`<div class="section vision-section"><div class="section-label">COMPELLING VISION</div><div class="vision-text">${ep(state.vision.long)||'<em>Not set</em>'}</div>${state.vision.short?`<div class="vision-short">"${ep(state.vision.short)}"</div>`:''}</div>`;const quadrantsHtml=QUADRANTS.map(q=>{const qSt=state.quadrants[q.key];const bg=Q_COLORS[q.key];return`<div class="q-block" style="border-left:6px solid ${bg}"><div class="q-block-header" style="color:${bg}">${q.icon} ${q.name}</div><div class="q-block-sub">${q.subtitle}</div><table class="q-table"><tr><td class="field-label">12-WEEK OBJECTIVE</td><td>${ep(qSt.objective.text)||'<em>Not set</em>'}</td></tr><tr><td class="field-label">PRIMARY TACTIC</td><td>${ep(qSt.primaryTactic.text)||'<em>Not set</em>'}</td></tr><tr><td class="field-label">SECONDARY TACTIC</td><td>${ep(qSt.secondaryTactic.text)||'<em>Not set</em>'}</td></tr><tr><td class="field-label">30-DAY CHECKPOINT</td><td>${ep(qSt.cp30.text)||'<em>Not set</em>'}</td></tr><tr><td class="field-label">60-DAY CHECKPOINT</td><td>${ep(qSt.cp60.text)||'<em>Not set</em>'}</td></tr></table></div>`;}).join('');const nonNegHtml=(state.nonNeg||[]).length>0?`<div class="section"><div class="section-label">DAILY NON-NEGOTIABLES</div><ul class="task-list">${state.nonNeg.map(t=>`<li>${ep(t)}</li>`).join('')}</ul></div>`:'';const aarHtml=(state.aar.win||state.aar.loss||state.aar.adj||state.aar.next)?`<div class="section"><div class="section-label">AFTER ACTION REVIEW</div><table class="q-table">${state.aar.win?`<tr><td class="field-label">WHAT WENT WELL</td><td>${ep(state.aar.win)}</td></tr>`:''}${state.aar.loss?`<tr><td class="field-label">WHAT DIDN'T</td><td>${ep(state.aar.loss)}</td></tr>`:''}${state.aar.adj?`<tr><td class="field-label">ADJUSTMENTS</td><td>${ep(state.aar.adj)}</td></tr>`:''}${state.aar.next?`<tr><td class="field-label">NEXT QUARTER</td><td>${ep(state.aar.next)}</td></tr>`:''}${state.aar.score!==null?`<tr><td class="field-label">SCORE</td><td>${state.aar.score}/10</td></tr>`:''}</table></div>`:'';const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Battle Plan - ${qLabel} ${qYear}</title><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet"><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Barlow',sans-serif;color:#1a1a18;background:white;font-size:13px;line-height:1.5}.page{max-width:760px;margin:0 auto;padding:40px 36px}.doc-header{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:3px solid #1a1a18;padding-bottom:16px;margin-bottom:28px}.doc-title{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:4px;line-height:1}.doc-meta{text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:13px;color:#666;letter-spacing:1px;line-height:1.7}.doc-quarter{font-family:'Bebas Neue',sans-serif;font-size:24px;color:#d4621a;letter-spacing:2px}.section{margin-bottom:28px}.section-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#888;border-bottom:1px solid #ddd;padding-bottom:5px;margin-bottom:12px}.vision-section{background:#f9f7f3;border-left:4px solid #d4621a;padding:16px 18px;border-radius:0 4px 4px 0}.vision-text{font-size:14px;line-height:1.8;margin-bottom:8px;font-style:italic}.vision-short{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:#d4621a}.q-block{padding:16px 18px;margin-bottom:16px;background:#fafafa;border-radius:0 4px 4px 0;page-break-inside:avoid}.q-block-header{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;margin-bottom:2px}.q-block-sub{font-family:'Barlow Condensed',sans-serif;font-size:12px;color:#888;letter-spacing:1px;margin-bottom:12px}.q-table{width:100%;border-collapse:collapse}.q-table tr{border-bottom:1px solid #eee}.q-table tr:last-child{border-bottom:none}.q-table td{padding:7px 6px;vertical-align:top}.field-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#888;white-space:nowrap;width:160px;padding-right:12px}.task-list{padding-left:18px}.task-list li{margin-bottom:5px}.doc-footer{margin-top:40px;padding-top:12px;border-top:1px solid #ddd;font-family:'Barlow Condensed',sans-serif;font-size:11px;color:#aaa;letter-spacing:1px;display:flex;justify-content:space-between}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}.page{padding:20px}}</style></head><body><div class="page"><div class="doc-header"><div><div class="doc-title">BATTLE PLANNER</div><div class="doc-quarter">${qLabel}</div></div><div class="doc-meta">Generated: ${today}<br>Start: ${startFmt}<br>End: ${endFmt}</div></div>${visionHtml}<div class="section"><div class="section-label">QUADRANTS</div>${quadrantsHtml}</div>${nonNegHtml}${aarHtml}<div class="doc-footer"><span>BATTLE PLANNER - ORDER OF MAN</span><span>${qLabel}</span></div></div><script>window.onload=function(){window.print();}<\/script></body></html>`;const blob=new Blob([html],{type:'text/html'});const url=URL.createObjectURL(blob);const win=window.open(url,'_blank');if(!win)alert('Allow pop-ups to download your Battle Plan PDF.');}
 
@@ -746,7 +766,130 @@ function downloadBattlePlan(){const Q_COLORS={calibration:'#7a7245',connection:'
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 const sb=supabase.createClient('https://wjyhehuucmokdkpwiudf.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndqeWhlaHV1Y21va2RrcHdpdWRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5NjE1MzMsImV4cCI6MjA5MDUzNzUzM30.g5ZF_qad1gM3eSZI8ohbZJBOAN7UIdtBtrwJ127Afpo');
+window._sb=sb;
 let cloudDataLoaded=false;
+let teamState={team:null,members:[],myRole:null,memberPlans:{}};
+
+function extractTeammateStats(planData){
+  if(!planData)return{name:'Unknown',br:0,weeklyCompletion:{}};
+  var total=1,done=0;
+  if(planData.vision&&(planData.vision.short||planData.vision.long))done++;
+  var flds=['objective','primaryTactic','secondaryTactic','cp30','cp60'];
+  var qkeys=['calibration','connection','condition','contribution'];
+  qkeys.forEach(function(qk){flds.forEach(function(f){total++;if(planData.quadrants&&planData.quadrants[qk]&&planData.quadrants[qk][f]&&planData.quadrants[qk][f].finalized)done++;});});
+  var br=Math.round((done/total)*100);
+  var today=new Date();var dow=today.getDay();var weekDays=[];
+  for(var i=0;i<7;i++){var d=new Date(today);d.setDate(today.getDate()-dow+i);weekDays.push(localDateKey(d));}
+  var weeklyCompletion={};
+  qkeys.forEach(function(qk){var count=0;weekDays.forEach(function(dk){if(planData.daily&&planData.daily[dk]&&planData.daily[dk].quadrants&&planData.daily[dk].quadrants[qk]&&planData.daily[dk].quadrants[qk].primary==='done')count++;});weeklyCompletion[qk]=count;});
+  return{name:(planData.profile&&planData.profile.name)||'Unnamed',br:br,weeklyCompletion:weeklyCompletion};
+}
+
+function renderNoTeam(){
+  var body=document.getElementById('team-body');if(!body)return;
+  body.innerHTML='<div style="text-align:center;padding:32px 0 24px"><div style="font-size:48px;margin-bottom:16px">&#128101;</div><div style="font-family:var(--fd);font-size:28px;letter-spacing:3px;margin-bottom:8px">NO FIRE TEAM</div><div style="font-family:var(--fc);font-size:13px;color:var(--muted);letter-spacing:.5px;line-height:1.6">Create a team and invite your brothers,<br>or enter a code to join an existing team.</div></div>'
+  +'<div class="sub-card" style="margin-bottom:12px"><div class="acct-stitle" style="margin-top:0">CREATE A TEAM</div><div style="background:#111110;border:1px solid #333;border-radius:6px;padding:14px;margin-bottom:10px"><div style="font-family:var(--fc);font-size:11px;font-weight:700;letter-spacing:1.5px;color:#888;margin-bottom:5px">TEAM NAME</div><input id="new-team-name" type="text" placeholder="e.g. EPSILON" style="width:100%;background:none;border:none;outline:none;font-family:var(--fb);font-size:17px;font-weight:600;color:var(--light)"/></div><button class="btn-primary" onclick="window.createTeam()">CREATE TEAM</button></div>'
+  +'<div class="sub-card"><div class="acct-stitle" style="margin-top:0">JOIN A TEAM</div><div style="background:#111110;border:1px solid #333;border-radius:6px;padding:14px;margin-bottom:10px"><div style="font-family:var(--fc);font-size:11px;font-weight:700;letter-spacing:1.5px;color:#888;margin-bottom:5px">INVITE CODE</div><input id="join-code-input" type="text" placeholder="e.g. AB12CD" maxlength="8" style="width:100%;background:none;border:none;outline:none;font-family:var(--fb);font-size:17px;font-weight:600;color:var(--light);text-transform:uppercase"/></div><button class="btn-primary" onclick="window.joinTeam()">JOIN TEAM</button></div>';
+}
+
+function renderTeamView(currentUserId){
+  var body=document.getElementById('team-body');if(!body)return;
+  var team=teamState.team;var isAdmin=teamState.myRole==='admin';
+  var html='<div style="text-align:center;padding:24px 0 16px"><div style="font-family:var(--fd);font-size:36px;letter-spacing:4px;color:var(--orange)">'+esc(team.name)+'</div><div style="font-family:var(--fc);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">FIRE TEAM</div></div>';
+  if(isAdmin&&team.invite_code){
+    html+='<div class="invite-code-box"><div style="font-family:var(--fc);font-size:11px;letter-spacing:2px;color:var(--muted);margin-bottom:8px">INVITE CODE - SHARE WITH YOUR TEAM</div>'
+    +'<div style="font-family:var(--fd);font-size:52px;letter-spacing:10px;color:var(--orange);margin-bottom:14px">'+esc(team.invite_code)+'</div>'
+    +'<div style="display:flex;gap:8px"><button class="team-btn" onclick="copyInviteCode(\''+esc(team.invite_code)+'\')">COPY CODE</button><button class="team-btn" onclick="window.regenerateCode()">NEW CODE</button></div></div>';
+  }
+  html+='<div style="font-family:var(--fd);font-size:20px;letter-spacing:2px;margin-bottom:12px">MEMBERS ('+teamState.members.length+')</div>';
+  teamState.members.forEach(function(member){
+    var planData=teamState.memberPlans[member.user_id];
+    var stats=extractTeammateStats(planData);
+    var isMe=member.user_id===currentUserId;
+    var isThisAdmin=member.role==='admin';
+    var quadHtml=QUADRANTS.map(function(q){var wc=stats.weeklyCompletion[q.key]||0;var col=wc>=5?'var(--orange)':'var(--light)';return'<div style="flex:1;text-align:center"><div style="font-size:16px">'+q.icon+'</div><div style="font-family:var(--fd);font-size:18px;color:'+col+'">'+wc+'/7</div><div style="font-family:var(--fc);font-size:9px;color:var(--muted);letter-spacing:.5px">'+q.name.slice(0,4)+'</div></div>';}).join('');
+    var removeBtn=isAdmin&&!isMe?'<button class="sobtn" style="margin-top:14px" onclick="window.removeMember(\''+member.user_id+'\')">REMOVE MEMBER</button>':'';
+    var roleLabel=isThisAdmin?'TEAM LEADER':'MEMBER';
+    var youLabel=isMe?' (YOU)':'';
+    html+='<div class="team-member-card"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">'
+    +'<div><div style="font-family:var(--fc);font-size:18px;font-weight:700;letter-spacing:1px">'+esc(stats.name)+youLabel+'</div><div style="font-family:var(--fc);font-size:12px;color:var(--muted);letter-spacing:1px;margin-top:2px">'+roleLabel+'</div></div>'
+    +'<div style="text-align:right"><div style="font-family:var(--fd);font-size:32px;color:var(--orange);line-height:1">'+stats.br+'%</div><div style="font-family:var(--fc);font-size:10px;color:var(--muted);letter-spacing:1px">BATTLE-READY</div></div></div>'
+    +'<div class="br-bar" style="margin-bottom:14px"><div class="br-fill" style="width:'+stats.br+'%"></div></div>'
+    +'<div style="display:flex;gap:6px">'+quadHtml+'</div>'+removeBtn+'</div>';
+  });
+  body.innerHTML=html;
+}
+
+async function loadTeamData(){
+  var body=document.getElementById('team-body');
+  if(body)body.innerHTML='<div style="text-align:center;padding:40px 0;color:var(--muted);font-family:var(--fc);letter-spacing:1px">Loading...</div>';
+  try{
+    var userRes=await sb.auth.getUser();var user=userRes.data.user;if(!user)return;
+    var memRes=await sb.from('team_members').select('team_id,role').eq('user_id',user.id).maybeSingle();
+    if(!memRes.data){renderNoTeam();return;}
+    teamState.myRole=memRes.data.role;
+    var teamRes=await sb.from('teams').select('*').eq('id',memRes.data.team_id).single();
+    teamState.team=teamRes.data;
+    var membersRes=await sb.from('team_members').select('id,user_id,role,joined_at').eq('team_id',memRes.data.team_id);
+    teamState.members=membersRes.data||[];
+    var userIds=teamState.members.map(function(m){return m.user_id;});
+    var plansRes=await sb.from('plans').select('user_id,data').in('user_id',userIds);
+    teamState.memberPlans={};
+    (plansRes.data||[]).forEach(function(p){teamState.memberPlans[p.user_id]=p.data;});
+    renderTeamView(user.id);
+  }catch(e){
+    console.log('team load error',e);
+    if(body)body.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted);font-family:var(--fc)">Error loading team data.</div>';
+  }
+}
+window._loadTeamData=loadTeamData;
+
+window.createTeam=async function(){
+  var nameEl=document.getElementById('new-team-name');if(!nameEl)return;
+  var teamName=nameEl.value.trim().toUpperCase();
+  if(!teamName){alert('Enter a team name.');return;}
+  var userRes=await sb.auth.getUser();var user=userRes.data.user;if(!user)return;
+  var inviteCode=Math.random().toString(36).substr(2,6).toUpperCase();
+  var teamRes=await sb.from('teams').insert({name:teamName,created_by:user.id,invite_code:inviteCode}).select().single();
+  if(teamRes.error){alert('Error creating team: '+teamRes.error.message);return;}
+  var memRes=await sb.from('team_members').insert({team_id:teamRes.data.id,user_id:user.id,role:'admin'});
+  if(memRes.error){alert('Error: '+memRes.error.message);return;}
+  await loadTeamData();
+};
+
+window.joinTeam=async function(){
+  var codeEl=document.getElementById('join-code-input');if(!codeEl)return;
+  var code=codeEl.value.trim().toUpperCase();
+  if(!code){alert('Enter an invite code.');return;}
+  var userRes=await sb.auth.getUser();var user=userRes.data.user;if(!user)return;
+  var teamRes=await sb.from('teams').select('id,name').eq('invite_code',code).maybeSingle();
+  if(!teamRes.data){alert('Invalid invite code. Check the code and try again.');return;}
+  var memRes=await sb.from('team_members').insert({team_id:teamRes.data.id,user_id:user.id,role:'member'});
+  if(memRes.error){
+    var msg=memRes.error.message.toLowerCase();
+    if(msg.includes('unique')||msg.includes('duplicate'))alert('You are already on a team.');
+    else alert('Error joining team: '+memRes.error.message);
+    return;
+  }
+  await loadTeamData();
+};
+
+window.removeMember=async function(userId){
+  if(!confirm('Remove this member from the team?'))return;
+  var res=await sb.from('team_members').delete().eq('user_id',userId);
+  if(res.error){alert('Error: '+res.error.message);return;}
+  await loadTeamData();
+};
+
+window.regenerateCode=async function(){
+  if(!teamState.team)return;
+  var newCode=Math.random().toString(36).substr(2,6).toUpperCase();
+  var res=await sb.from('teams').update({invite_code:newCode}).eq('id',teamState.team.id);
+  if(res.error){alert('Error: '+res.error.message);return;}
+  teamState.team.invite_code=newCode;
+  var userRes=await sb.auth.getUser();
+  renderTeamView(userRes.data.user.id);
+};
 let booted=false;
 let authMode='signin';
 
@@ -797,6 +940,10 @@ function showAuthScreen(){
   booted=false;
   cloudDataLoaded=false;
   window._cloudSave=null;
+  localStorage.removeItem('bp_v3');
+  state={quarter:1,quarterLabel:'',vision:{long:'',short:''},quadrants:{},daily:{},aar:{win:'',loss:'',adj:'',next:'',score:null},startDate:null,quarterEnd:null,modalDismissed:false,nonNeg:[],profile:{name:'',phone:'',gender:'',age:'',zip:'',photoDataUrl:''},history:[]};
+  QUADRANTS.forEach(function(q){state.quadrants[q.key]={};FIELDS.forEach(function(f){state.quadrants[q.key][f]={text:'',finalized:false};});});
+  teamState={team:null,members:[],myRole:null,memberPlans:{}};
   authMode='signin';
   var as=document.getElementById('auth-screen');
   as.style.display='flex';
