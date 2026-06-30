@@ -767,6 +767,7 @@ function downloadBattlePlan(){const Q_COLORS={calibration:'#7a7245',connection:'
 <script>
 const sb=supabase.createClient('https://wjyhehuucmokdkpwiudf.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndqeWhlaHV1Y21va2RrcHdpdWRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5NjE1MzMsImV4cCI6MjA5MDUzNzUzM30.g5ZF_qad1gM3eSZI8ohbZJBOAN7UIdtBtrwJ127Afpo');
 window._sb=sb;
+window.appRole=null;
 let cloudDataLoaded=false;
 let teamState={team:null,members:[],myRole:null,memberPlans:{}};
 
@@ -787,15 +788,24 @@ function extractTeammateStats(planData){
 
 function renderNoTeam(){
   var body=document.getElementById('team-body');if(!body)return;
-  body.innerHTML='<div style="text-align:center;padding:32px 0 24px"><div style="font-size:48px;margin-bottom:16px">&#128101;</div><div style="font-family:var(--fd);font-size:28px;letter-spacing:3px;margin-bottom:8px">NO FIRE TEAM</div><div style="font-family:var(--fc);font-size:13px;color:var(--muted);letter-spacing:.5px;line-height:1.6">Create a team and invite your brothers,<br>or enter a code to join an existing team.</div></div>'
-  +'<div class="sub-card" style="margin-bottom:12px"><div class="acct-stitle" style="margin-top:0">CREATE A TEAM</div><div style="background:#111110;border:1px solid #333;border-radius:6px;padding:14px;margin-bottom:10px"><div style="font-family:var(--fc);font-size:11px;font-weight:700;letter-spacing:1.5px;color:#888;margin-bottom:5px">TEAM NAME</div><input id="new-team-name" type="text" placeholder="e.g. EPSILON" style="width:100%;background:none;border:none;outline:none;font-family:var(--fb);font-size:17px;font-weight:600;color:var(--light)"/></div><button class="btn-primary" onclick="window.createTeam()">CREATE TEAM</button></div>'
-  +'<div class="sub-card"><div class="acct-stitle" style="margin-top:0">JOIN A TEAM</div><div style="background:#111110;border:1px solid #333;border-radius:6px;padding:14px;margin-bottom:10px"><div style="font-family:var(--fc);font-size:11px;font-weight:700;letter-spacing:1.5px;color:#888;margin-bottom:5px">INVITE CODE</div><input id="join-code-input" type="text" placeholder="e.g. AB12CD" maxlength="8" style="width:100%;background:none;border:none;outline:none;font-family:var(--fb);font-size:17px;font-weight:600;color:var(--light);text-transform:uppercase"/></div><button class="btn-primary" onclick="window.joinTeam()">JOIN TEAM</button></div>';
+  var isLeaderOrAdmin=window.appRole==='leader'||window.appRole==='admin';
+  var html='<div style="text-align:center;padding:32px 0 24px"><div style="font-size:48px;margin-bottom:16px">&#128101;</div><div style="font-family:var(--fd);font-size:28px;letter-spacing:3px;margin-bottom:8px">NO FIRE TEAM</div>';
+  if(isLeaderOrAdmin){
+    html+='<div style="font-family:var(--fc);font-size:13px;color:var(--muted);letter-spacing:.5px;line-height:1.6">Create a team and add your brothers by email.</div></div>';
+    html+='<div class="sub-card" style="margin-bottom:12px"><div class="acct-stitle" style="margin-top:0">CREATE A TEAM</div><div style="background:#111110;border:1px solid #333;border-radius:6px;padding:14px;margin-bottom:10px"><div style="font-family:var(--fc);font-size:11px;font-weight:700;letter-spacing:1.5px;color:#888;margin-bottom:5px">TEAM NAME</div><input id="new-team-name" type="text" placeholder="e.g. EPSILON" style="width:100%;background:none;border:none;outline:none;font-family:var(--fb);font-size:17px;font-weight:600;color:var(--light)"/></div><button class="btn-primary" onclick="window.createTeam()">CREATE TEAM</button></div>';
+  }else{
+    html+='<div style="font-family:var(--fc);font-size:13px;color:var(--muted);letter-spacing:.5px;line-height:1.6">You haven\'t been added to a team yet.<br>Ask your team leader to add you.</div></div>';
+  }
+  body.innerHTML=html;
 }
 
 function renderTeamView(currentUserId){
   var body=document.getElementById('team-body');if(!body)return;
-  var team=teamState.team;var isAdmin=teamState.myRole==='admin';
+  var team=teamState.team;var isAdmin=window.appRole==='admin'||window.appRole==='leader';
   var html='<div style="text-align:center;padding:24px 0 16px"><div style="font-family:var(--fd);font-size:36px;letter-spacing:4px;color:var(--orange)">'+esc(team.name)+'</div><div style="font-family:var(--fc);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">FIRE TEAM</div></div>';
+  if(isAdmin){
+    html+='<div class="sub-card" style="margin-bottom:12px"><div class="acct-stitle" style="margin-top:0">ADD MEMBER</div><div style="background:#111110;border:1px solid #333;border-radius:6px;padding:14px;margin-bottom:10px"><div style="font-family:var(--fc);font-size:11px;font-weight:700;letter-spacing:1.5px;color:#888;margin-bottom:5px">EMAIL ADDRESS</div><input id="add-member-email" type="email" placeholder="member@email.com" style="width:100%;background:none;border:none;outline:none;font-family:var(--fb);font-size:17px;font-weight:600;color:var(--light)"/></div><div id="add-member-msg" style="font-family:var(--fc);font-size:12px;color:var(--muted);margin-bottom:8px;min-height:16px"></div><button class="btn-primary" onclick="window.addMemberByEmail()">ADD MEMBER</button></div>';
+  }
   if(isAdmin&&team.invite_code){
     html+='<div class="invite-code-box"><div style="font-family:var(--fc);font-size:11px;letter-spacing:2px;color:var(--muted);margin-bottom:8px">INVITE CODE - SHARE WITH YOUR TEAM</div>'
     +'<div style="font-family:var(--fd);font-size:52px;letter-spacing:10px;color:var(--orange);margin-bottom:14px">'+esc(team.invite_code)+'</div>'
@@ -901,6 +911,32 @@ window.updateMemberRole=async function(userId,role){
   await loadTeamData();
 };
 
+window.addMemberByEmail=async function(){
+  var emailEl=document.getElementById('add-member-email');
+  var msgEl=document.getElementById('add-member-msg');
+  if(!emailEl||!msgEl)return;
+  var email=emailEl.value.trim().toLowerCase();
+  if(!email){msgEl.style.color='#d4621a';msgEl.textContent='Enter an email address.';return;}
+  if(!teamState.team){msgEl.style.color='#d4621a';msgEl.textContent='No team loaded.';return;}
+  msgEl.style.color='var(--muted)';msgEl.textContent='Looking up account...';
+  try{
+    var lookupRes=await window._sb.rpc('get_user_id_by_email',{p_email:email});
+    if(lookupRes.error||!lookupRes.data){
+      msgEl.style.color='#d4621a';
+      msgEl.textContent='No account found for that email. Ask them to sign up at shredgnar26.github.io/battle-planner/ first.';
+      return;
+    }
+    var targetUserId=lookupRes.data;
+    var already=teamState.members.find(function(m){return m.user_id===targetUserId;});
+    if(already){msgEl.style.color='#d4621a';msgEl.textContent='That person is already on the team.';return;}
+    var insertRes=await window._sb.from('team_members').insert({team_id:teamState.team.id,user_id:targetUserId,role:'member'});
+    if(insertRes.error){msgEl.style.color='#d4621a';msgEl.textContent='Error adding member: '+insertRes.error.message;return;}
+    msgEl.style.color='#7aea7a';msgEl.textContent='Member added!';
+    emailEl.value='';
+    await loadTeamData();
+  }catch(e){msgEl.style.color='#d4621a';msgEl.textContent='Error: '+e.message;}
+};
+
 window.regenerateCode=async function(){
   if(!teamState.team)return;
   var newCode=Math.random().toString(36).substr(2,6).toUpperCase();
@@ -943,6 +979,13 @@ async function loadFromCloud(user){
   }catch(e){console.log('cloud load error',e);return false;}
 }
 
+async function fetchAppRole(userId){
+  try{
+    var res=await window._sb.from('user_roles').select('role').eq('user_id',userId).maybeSingle();
+    window.appRole=(res.data&&res.data.role)||null;
+  }catch(e){window.appRole=null;}
+}
+
 async function bootApp(user){
   if(booted)return;
   booted=true;
@@ -951,6 +994,7 @@ async function bootApp(user){
   await loadFromCloud(user);
   cloudDataLoaded=true;
   window._cloudSave=saveToCloud;
+  await fetchAppRole(user.id);
   renderQ();
   updateBR();
   updateProfileUI(user.email);
