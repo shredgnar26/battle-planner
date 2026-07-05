@@ -93,9 +93,9 @@ main{padding-bottom:40px}
 .dq-wicos{display:flex;gap:6px}
 .dq-wico{width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:13px;color:rgba(255,255,255,.6);cursor:pointer}
 .dq-wico.active{background:rgba(255,255,255,.25);border-color:white;color:white}
-.week-grid{display:flex;gap:4px;margin-bottom:16px}
-.wday-cell{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
-.wday-box{width:100%;aspect-ratio:1;border:1.5px solid rgba(255,255,255,.25);border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:var(--fc);font-size:13px;font-weight:700;cursor:pointer;transition:all .15s}
+.week-grid{display:flex;gap:4px;margin-bottom:16px;justify-content:space-between}
+.wday-cell{flex:0 1 40px;max-width:40px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.wday-box{width:40px;height:40px;max-width:100%;border:1.5px solid rgba(255,255,255,.25);border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:var(--fc);font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;box-sizing:border-box}
 .wday-box.today{border-color:white;background:rgba(255,255,255,.15)}
 .wday-box.done{background:rgba(50,180,50,.3);border-color:#5aba5a}
 .wday-num{font-family:var(--fc);font-size:10px;opacity:.5}
