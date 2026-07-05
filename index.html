@@ -4,6 +4,11 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
 <title>Battle Planner</title>
+<link rel="manifest" href="manifest.json"/>
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png"/>
+<meta name="theme-color" content="#1e1e1c"/>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
@@ -778,7 +783,7 @@ function confirmNewPlanAction(){
 function openReminderPicker(qKey){var p=document.getElementById('reminder-picker-'+qKey);if(p)p.style.display=p.style.display==='none'?'block':'none';}
 async function saveReminder(qKey){var input=document.getElementById('reminder-time-'+qKey);if(!input||!input.value)return;if(!state.reminders)state.reminders={};if(typeof Notification!=='undefined'&&Notification.permission==='default'){var perm=await Notification.requestPermission();if(perm!=='granted'){alert('Enable notifications in your browser to use reminders.');return;}}if(typeof Notification!=='undefined'&&Notification.permission!=='granted'){alert('Notifications are blocked. Enable them in your browser settings.');return;}state.reminders[qKey]=input.value;save();renderDaily();}
 function clearReminder(qKey){if(!state.reminders)state.reminders={};delete state.reminders[qKey];save();renderDaily();}
-function checkReminders(){if(!state.reminders)return;if(typeof Notification==='undefined'||Notification.permission!=='granted')return;var now=new Date();var hh=String(now.getHours()).padStart(2,'0');var mm=String(now.getMinutes()).padStart(2,'0');var currentTime=hh+':'+mm;var dk=dayKey(0);QUADRANTS.forEach(function(q){var rt=state.reminders[q.key];if(!rt||rt!==currentTime)return;var dd=getDailyData(dk);if(dd.quadrants[q.key]&&dd.quadrants[q.key].primary==='done')return;var tactic=state.quadrants[q.key].primaryTactic.text||q.name+' tactic';try{new Notification('Battle Planner',{body:'Time for '+q.name+': '+tactic,icon:'https://shredgnar26.github.io/battle-planner/icon-192.png'});}catch(e){}});}
+function checkReminders(){if(!state.reminders)return;if(typeof Notification==='undefined'||Notification.permission!=='granted')return;var now=new Date();var hh=String(now.getHours()).padStart(2,'0');var mm=String(now.getMinutes()).padStart(2,'0');var currentTime=hh+':'+mm;var dk=dayKey(0);QUADRANTS.forEach(function(q){var rt=state.reminders[q.key];if(!rt||rt!==currentTime)return;var dd=getDailyData(dk);if(dd.quadrants[q.key]&&dd.quadrants[q.key].primary==='done')return;var tactic=state.quadrants[q.key].primaryTactic.text||q.name+' tactic';try{new Notification('Battle Planner',{body:'Time for '+q.name+': '+tactic,icon:'icons/icon-192.png'});}catch(e){}});}
 
 function openTeam(){closeMenu();document.getElementById('team-screen').classList.add('open');if(window._loadTeamData)window._loadTeamData();}
 function closeTeam(){document.getElementById('team-screen').classList.remove('open');}
