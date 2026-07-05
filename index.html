@@ -187,6 +187,9 @@ main{padding-bottom:40px}
 /* EDIT INFO SCREEN */
 .edit-screen{position:fixed;inset:0;background:#141412;z-index:700;display:flex;flex-direction:column;overflow-y:auto;transform:translateX(100%);transition:transform .28s ease}
 .edit-screen.open{transform:translateX(0)}
+/* MEMBER DETAIL SCREEN */
+.member-detail-screen{position:fixed;inset:0;background:#141412;z-index:710;display:flex;flex-direction:column;overflow-y:auto;transform:translateX(100%);transition:transform .28s ease}
+.member-detail-screen.open{transform:translateX(0)}
 .edit-hdr{position:relative;text-align:center;padding:28px 20px 24px;background:linear-gradient(to bottom,#1e1e1c,#141412);border-bottom:1px solid rgba(255,255,255,.06)}
 .edit-back{position:absolute;top:20px;left:20px;background:rgba(255,255,255,.08);border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .edit-llbl{font-family:var(--fc);font-size:11px;letter-spacing:3px;color:var(--muted);margin-bottom:18px}
@@ -274,7 +277,7 @@ main{padding-bottom:40px}
 @media(min-width:640px){
   body{background:#0a0a08}
   .app-header,.tab-bar,main{max-width:480px;margin-left:auto;margin-right:auto}
-  #auth-screen,.menu-overlay,.acct-screen,.edit-screen,.team-screen,.sd-screen{left:calc(50% - 240px);right:auto;width:480px}
+  #auth-screen,.menu-overlay,.acct-screen,.edit-screen,.team-screen,.member-detail-screen,.sd-screen{left:calc(50% - 240px);right:auto;width:480px}
   .save-toast{right:auto;left:calc(50% + 190px)}
 }
 .team-member-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:18px;margin-bottom:12px}
@@ -486,6 +489,16 @@ main{padding-bottom:40px}
   <div id="team-body" class="acct-body">
     <div style="text-align:center;padding:40px 0;color:var(--muted);font-family:var(--fc);letter-spacing:1px">Loading...</div>
   </div>
+</div>
+
+<!-- MEMBER DETAIL SCREEN -->
+<div class="member-detail-screen" id="member-detail-screen">
+  <div class="acct-tbar">
+    <button class="acct-back" onclick="closeMemberDetail()">&#8592;</button>
+    <div class="acct-ttl" id="member-detail-ttl">MEMBER</div>
+    <div style="width:40px"></div>
+  </div>
+  <div id="member-detail-body" class="acct-body"></div>
 </div>
 
 <!-- VISION MODAL -->
@@ -843,7 +856,10 @@ function renderTeamView(currentUserId){
         var color=isDone?'#5aba5a':(isMissed?'rgba(200,80,80,.9)':'rgba(255,255,255,.4)');
         return'<div style="width:26px;height:26px;border:1.5px solid '+border+';border-radius:3px;background:'+bg+';display:flex;align-items:center;justify-content:center;font-size:11px;color:'+color+'">'+lbl+'</div>';
       }).join('');
-      return'<div style="display:flex;align-items:center;gap:5px;margin-bottom:5px"><div style="font-size:14px;width:20px;flex-shrink:0">'+q.icon+'</div><div style="display:flex;gap:3px">'+cells+'</div></div>';
+      var qTotal=(stats.weekDays||[]).length||7;
+      var qDone=stats.weeklyCompletion[q.key]||0;
+      var qPct=Math.round((qDone/qTotal)*100);
+      return'<div style="display:flex;align-items:center;gap:5px;margin-bottom:5px"><div style="font-size:14px;width:20px;flex-shrink:0">'+q.icon+'</div><div style="display:flex;gap:3px">'+cells+'</div><div style="margin-left:auto;padding-left:8px;font-family:var(--fc);font-size:12px;font-weight:700;letter-spacing:.5px;color:var(--muted)">'+qPct+'%</div></div>';
     }).join('');
     var roleTitles={'admin':'TEAM LEADER','battle team leader':'BATTLE TEAM LEADER','xo':'XO','fire team leader':'FIRE TEAM LEADER','member':'MEMBER'};
     var displayRole=roleTitles[member.role]||'MEMBER';
@@ -861,7 +877,7 @@ function renderTeamView(currentUserId){
       adminControls+='<button class="sobtn" style="margin-top:8px" onclick="window.removeMember(\''+member.user_id+'\')">REMOVE MEMBER</button>';
     }
     html+='<div class="team-member-card"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">'
-    +'<div><div style="font-family:var(--fc);font-size:18px;font-weight:700;letter-spacing:1px">'+esc(stats.name)+youLabel+'</div><div style="font-family:var(--fc);font-size:12px;color:var(--muted);letter-spacing:1px;margin-top:2px">'+displayRole+'</div></div>'
+    +'<div style="cursor:pointer" onclick="window.openMemberDetail(\''+member.user_id+'\')"><div style="font-family:var(--fc);font-size:18px;font-weight:700;letter-spacing:1px">'+esc(stats.name)+youLabel+' <span style="color:var(--muted);font-weight:400">&#8250;</span></div><div style="font-family:var(--fc);font-size:12px;color:var(--muted);letter-spacing:1px;margin-top:2px">'+displayRole+'</div></div>'
     +'<div style="text-align:right"><div style="font-family:var(--fd);font-size:32px;color:var(--orange);line-height:1">'+stats.br+'%</div><div style="font-family:var(--fc);font-size:10px;color:var(--muted);letter-spacing:1px">BATTLE-READY</div></div></div>'
     +'<div class="br-bar" style="margin-bottom:14px"><div class="br-fill" style="width:'+stats.br+'%"></div></div>'
     +'<div style="margin-top:4px">'+shameGrid+'</div>'+adminControls+'</div>';
@@ -892,6 +908,36 @@ async function loadTeamData(){
   }
 }
 window._loadTeamData=loadTeamData;
+
+function closeMemberDetail(){document.getElementById('member-detail-screen').classList.remove('open');}
+window.closeMemberDetail=closeMemberDetail;
+
+function renderMemberDetail(member,planData){
+  var stats=extractTeammateStats(planData);
+  var ttl=document.getElementById('member-detail-ttl');if(ttl)ttl.textContent=stats.name.toUpperCase();
+  var body=document.getElementById('member-detail-body');if(!body)return;
+  if(!planData){body.innerHTML='<div style="text-align:center;padding:40px 0;color:var(--muted);font-family:var(--fc);letter-spacing:1px">No battle plan data yet.</div>';return;}
+  var v=planData.vision||{};
+  var visionHtml='<div class="acct-stitle" style="margin-top:0">VISION</div><div class="sub-card" style="margin-bottom:16px"><div style="font-family:var(--fb);font-size:15px;line-height:1.6;color:var(--light);font-style:italic">'+(v.long?esc(v.long):'<span style="color:var(--muted);font-style:normal">Not set</span>')+'</div>'+(v.short?'<div style="font-family:var(--fc);font-size:16px;font-weight:700;color:var(--orange);margin-top:10px">"'+esc(v.short)+'"</div>':'')+'</div>';
+  var fieldLabels={objective:'12-WEEK OBJECTIVE',primaryTactic:'PRIMARY TACTIC',secondaryTactic:'SECONDARY TACTIC',cp30:'30-DAY CHECKPOINT',cp60:'60-DAY CHECKPOINT'};
+  var quadrantsHtml=QUADRANTS.map(function(q){
+    var qSt=(planData.quadrants&&planData.quadrants[q.key])||{};
+    var rows=FIELDS.map(function(f){
+      var val=(qSt[f]&&qSt[f].text)||'';
+      return'<div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,.08)"><div style="font-family:var(--fc);font-size:11px;font-weight:700;letter-spacing:1.5px;color:#888;margin-bottom:3px">'+fieldLabels[f]+'</div><div style="font-family:var(--fb);font-size:14px;color:var(--light)">'+(val?esc(val):'<span style="color:var(--muted)">Not set</span>')+'</div></div>';
+    }).join('');
+    return'<div class="sub-card" style="margin-bottom:12px;border-left:4px solid '+q.accent+'"><div style="font-family:var(--fd);font-size:22px;letter-spacing:2px;color:'+q.accent+'">'+q.icon+' '+q.name+'</div><div style="font-family:var(--fc);font-size:11px;color:var(--muted);letter-spacing:1px;margin-bottom:8px">'+q.subtitle+'</div>'+rows+'</div>';
+  }).join('');
+  body.innerHTML='<div style="text-align:center;padding:16px 0 20px"><div style="font-family:var(--fd);font-size:32px;color:var(--orange)">'+stats.br+'%</div><div style="font-family:var(--fc);font-size:11px;color:var(--muted);letter-spacing:1.5px">BATTLE-READY</div></div>'+visionHtml+'<div class="acct-stitle">BATTLE PLAN</div>'+quadrantsHtml;
+}
+
+function openMemberDetail(userId){
+  var member=teamState.members.find(function(m){return m.user_id===userId;});
+  if(!member)return;
+  renderMemberDetail(member,teamState.memberPlans[userId]);
+  document.getElementById('member-detail-screen').classList.add('open');
+}
+window.openMemberDetail=openMemberDetail;
 
 window.createTeam=async function(){
   var nameEl=document.getElementById('new-team-name');if(!nameEl)return;
